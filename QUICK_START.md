@@ -48,18 +48,19 @@ python -m app.scanner_cli watch /path/to/monitor --out ./results --poll-seconds 
 
 ## 📊 WHAT DOES IT FIND?
 
-### 🇺🇸 US-Based Information (Controlled)
-- ✅ Social Security Numbers: `123-45-6789`
-- ✅ US Phone Numbers: `(555) 123-4567`
-- ✅ US Addresses: `123 Main St, Boston, MA 02101`
-- ✅ US Government Emails: `admin@agency.gov`
+### 🏛️ Controlled Information
+- ✅ ID Numbers: `123-45-6789`
+- ✅ Controlled Phone Numbers: `(555) 123-4567`
+- ✅ Controlled Addresses: `123 Main St, Boston, MA 02101`
+- ✅ Controlled Government Emails: `admin@agency.gov`
 - ✅ Driver Licenses, ZIP codes, EIN numbers
 
-### 🌍 International Information (NonControlled)
+### 🌍 NonControlled Information
 - ✅ International Phones: `+44 20 7946 0958`
-- ✅ Foreign Addresses: `10 Downing St, London, UK`
+- ✅ NonControlled Addresses: `10 Downing St, London, UK`
 - ✅ Country Domains: `contact@company.co.uk`
 - ✅ International Postal Codes
+- ✅ Social Media Handles: `@username`, LinkedIn profiles
 
 ### 💳 Global Information
 - ✅ Credit Card Numbers (all countries)

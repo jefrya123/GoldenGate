@@ -1,12 +1,12 @@
 # 🔍 PII Scanner - Personal Information Identifier
 
-A rock-solid PII (Personally Identifiable Information) detection system with 90%+ accuracy, powered by Microsoft Presidio with enhanced custom recognizers and intelligent US vs foreign classification.
+A rock-solid PII (Personally Identifiable Information) detection system with 90%+ accuracy, powered by Microsoft Presidio with enhanced custom recognizers and intelligent Controlled vs NonControlled classification.
 
 ## ✨ Key Features
 
 - **🎯 90%+ Accuracy**: Enhanced Presidio integration with robust pattern matching
-- **🔍 Advanced PII Detection**: SSN, credit cards, phones, emails, addresses, EIN, ZIP codes, driver licenses
-- **🏷️ Smart Classification**: "Controlled" (US-based) vs "NonControlled" (foreign) with context analysis
+- **🔍 Advanced PII Detection**: ID numbers, credit cards, phones, emails, addresses, social media handles, EIN, ZIP codes, driver licenses
+- **🏷️ Smart Classification**: "Controlled" vs "NonControlled" with intelligent context analysis
 - **📁 Multi-Format Support**: Text files, PDFs, CSVs, logs, markdown, HTML with streaming processing
 - **⚡ Memory Efficient**: Chunked processing handles files of any size
 - **🚀 Super Easy Deployment**: One-command setup with comprehensive testing
@@ -71,20 +71,21 @@ python -m app.scanner_cli watch /dropbox/incoming --out ./monitoring --poll-seco
 
 ## 📋 Detected PII Types (Enhanced Presidio Integration)
 
-### Always Controlled (US-based)
-- **Social Security Numbers** (SSN): 123-45-6789, 123 45 6789, 123.45.6789
+### Always Controlled
+- **ID Numbers**: 123-45-6789, 123 45 6789, 123.45.6789
 - **Employer Identification Numbers** (EIN): 12-3456789
-- **US ZIP Codes**: 12345, 12345-6789
+- **ZIP Codes**: 12345, 12345-6789
 - **Driver License Numbers**: State-specific patterns
 
 ### Intelligently Classified
 - **Phone Numbers**: 
-  - US: (555) 123-4567, +1-555-123-4567 → Controlled
+  - Controlled: (555) 123-4567, +1-555-123-4567 → Controlled
   - International: +44 20 7946 0958, +81-3-1234-5678 → NonControlled
 - **Addresses**: 
-  - US: "123 Main St, New York, NY 10001" → Controlled
-  - Foreign: "10 Downing Street, London SW1A 2AA, UK" → NonControlled
+  - Controlled: "123 Main St, New York, NY 10001" → Controlled
+  - NonControlled: "10 Downing Street, London SW1A 2AA, UK" → NonControlled
 - **Email Addresses**: Domain-based classification (.gov, .edu vs .co.uk, .de)
+- **Social Media Handles**: @username, LinkedIn/Facebook profiles with context analysis
 
 ### Always NonControlled (Global)
 - **Credit Card Numbers**: Visa, Mastercard, Amex (with Luhn validation)
@@ -177,14 +178,14 @@ Configuration is stored in `~/.pii_scanner_config.json`
 ## 📊 Results Interpretation
 
 ### Severity Levels
-- **CRITICAL**: SSN, credit cards, bank routing, driver licenses
+- **CRITICAL**: ID numbers, credit cards, bank routing, driver licenses
 - **MEDIUM**: Phone numbers, addresses, EIN, ZIP codes
-- **LOW**: Email addresses, social handles
+- **LOW**: Email addresses, social media handles
 - **NONE**: No PII detected
 
 ### Classification
-- **Controlled**: US-based entities (SSN, US addresses, etc.)
-- **NonControlled**: Foreign/global entities (international phones, foreign addresses, etc.)
+- **Controlled**: Controlled jurisdiction entities (ID numbers, Controlled addresses, etc.)
+- **NonControlled**: Non-controlled entities (international phones, non-controlled addresses, etc.)
 
 ## 🎯 Use Cases
 

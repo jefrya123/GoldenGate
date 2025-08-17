@@ -113,6 +113,13 @@ def build_analyzer() -> Optional[AnalyzerEngine]:
             ]),
             EnhancedRobustRecognizer("DRIVER_LICENSE", [
                 Pattern("DL_PATTERN", r'\b[A-Z]{1,2}\d{6,8}\b', 0.8)
+            ]),
+            EnhancedRobustRecognizer("SOCIAL_MEDIA_HANDLE", [
+                Pattern("TWITTER_X_HANDLE", r'@[A-Za-z0-9_]{1,15}\b', 0.9),
+                Pattern("INSTAGRAM_HANDLE", r'@[A-Za-z0-9_.]{1,30}\b', 0.9),
+                Pattern("LINKEDIN_HANDLE", r'linkedin\.com/in/[A-Za-z0-9-]+', 0.95),
+                Pattern("FACEBOOK_HANDLE", r'facebook\.com/[A-Za-z0-9.]+', 0.9),
+                Pattern("GENERIC_SOCIAL_HANDLE", r'@[A-Za-z0-9_.-]{3,30}\b', 0.7)
             ])
         ]
         
@@ -182,7 +189,7 @@ def _process_with_presidio(analyzer: AnalyzerEngine, text: str, chunk_size: int,
         try:
             results = analyzer.analyze(
                 text=chunk,
-                entities=["ID", "PHONE_NUMBER", "ADDRESS", "EMAIL_ADDRESS", "CREDIT_CARD", "EIN", "ZIP", "DRIVER_LICENSE"],
+                entities=["ID", "PHONE_NUMBER", "ADDRESS", "EMAIL_ADDRESS", "CREDIT_CARD", "EIN", "ZIP", "DRIVER_LICENSE", "SOCIAL_MEDIA_HANDLE"],
                 language="en"
             )
             

@@ -11,11 +11,11 @@ from presidio_analyzer.nlp_engine import NlpArtifacts
 # Fallback regex patterns for when Presidio is not available
 FALLBACK_REGEX = {
     'ID': [
-        # SSN pattern (XXX-XX-XXXX)
+        # ID pattern (XXX-XX-XXXX)
         r'\b\d{3}-\d{2}-\d{4}\b',
-        # SSN with spaces (XXX XX XXXX)
+        # ID with spaces (XXX XX XXXX)
         r'\b\d{3}\s\d{2}\s\d{4}\b',
-        # SSN without dashes
+        # ID without dashes
         r'\b\d{9}\b'
     ],
     'EIN': [
@@ -44,7 +44,7 @@ FALLBACK_REGEX = {
         # International format
         r'\b\+\d{1,3}[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}\b'
     ],
-    'SOCIAL_HANDLE': [
+    'SOCIAL_MEDIA_HANDLE': [
         # LinkedIn profiles
         r'\b(?:https?://)?(?:www\.)?linkedin\.com/in/[A-Za-z0-9-]+\b',
         # Facebook profiles
@@ -68,12 +68,12 @@ FALLBACK_REGEX = {
 
 
 class CustomIDRecognizer(PatternRecognizer):
-    """Custom recognizer for SSN-style ID numbers."""
+    """Custom recognizer for ID numbers."""
     
     def __init__(self):
         patterns = [
-            Pattern("SSN", r'\b\d{3}-\d{2}-\d{4}\b', 0.9),
-            Pattern("SSN_NO_DASHES", r'\b\d{9}\b', 0.8)
+            Pattern("ID", r'\b\d{3}-\d{2}-\d{4}\b', 0.9),
+            Pattern("ID_NO_DASHES", r'\b\d{9}\b', 0.8)
         ]
         super().__init__(
             supported_entity="ID",
@@ -141,7 +141,7 @@ class CustomDriverLicenseRecognizer(PatternRecognizer):
         )
 
 
-class CustomSocialHandleRecognizer(PatternRecognizer):
+class CustomSocialMediaHandleRecognizer(PatternRecognizer):
     """Custom recognizer for social media handles and profiles."""
     
     def __init__(self):
@@ -151,7 +151,7 @@ class CustomSocialHandleRecognizer(PatternRecognizer):
             Pattern("GENERIC_HANDLE", r'@[A-Za-z0-9_]{1,30}\b', 0.9)
         ]
         super().__init__(
-            supported_entity="SOCIAL_HANDLE",
+            supported_entity="SOCIAL_MEDIA_HANDLE",
             patterns=patterns,
             supported_language="en"
         )
@@ -170,7 +170,7 @@ def get_custom_recognizers() -> List[PatternRecognizer]:
         CustomZIPRecognizer(),
         CustomBankRoutingRecognizer(),
         CustomDriverLicenseRecognizer(),
-        CustomSocialHandleRecognizer()
+        CustomSocialMediaHandleRecognizer()
     ]
 
 
