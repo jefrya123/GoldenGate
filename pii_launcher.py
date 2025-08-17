@@ -5,6 +5,7 @@ PII Scanner Launcher - Easy entry point for all functionality.
 
 import sys
 import subprocess
+import os
 from pathlib import Path
 from app.config import get_config
 
@@ -14,6 +15,23 @@ def print_banner():
     print("🔍 PII Scanner - Personal Information Identifier")
     print("=" * 50)
 
+
+def validate_directory(path_str, description="Directory"):
+    """Validate directory path."""
+    if not path_str:
+        return None, f"❌ No {description.lower()} specified"
+    
+    path = Path(path_str).expanduser().resolve()
+    if not path.exists():
+        return None, f"❌ {description} does not exist: {path}"
+    
+    if not path.is_dir():
+        return None, f"❌ Path is not a directory: {path}"
+    
+    if not os.access(path, os.R_OK):
+        return None, f"❌ No read permission for: {path}"
+    
+    return path, None
 
 def print_menu():
     """Print main menu."""
@@ -35,17 +53,27 @@ def run_scan():
     print("-" * 30)
     
     # Get scan directory
-    scan_dir = input("Enter directory to scan: ").strip()
-    if not scan_dir:
-        print("❌ No directory specified")
+    scan_dir_input = input("Enter directory to scan: ").strip()
+    scan_dir, error = validate_directory(scan_dir_input, "Scan directory")
+    if error:
+        print(error)
         return
     
     # Get output directory
     config = get_config()
     default_out = config.get_default_output_dir()
-    out_dir = input(f"Enter output directory [{default_out}]: ").strip()
-    if not out_dir:
-        out_dir = default_out
+    out_dir_input = input(f"Enter output directory [{default_out}]: ").strip()
+    if not out_dir_input:
+        out_dir_input = default_out
+    
+    # Create output directory if it doesn't exist
+    out_dir = Path(out_dir_input).expanduser().resolve()
+    try:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        print(f"✅ Output directory: {out_dir}")
+    except Exception as e:
+        print(f"❌ Cannot create output directory: {e}")
+        return
     
     # Get extensions
     default_exts = ",".join(config.get_default_extensions())
@@ -70,23 +98,35 @@ def run_scan():
     # Build command
     cmd = [
         sys.executable, "-m", "app.scanner_cli",
-        "scan", scan_dir,
-        "--out", out_dir,
+        "scan", str(scan_dir),
+        "--out", str(out_dir),
         "--exts", exts,
         "--chunk-size", str(chunk_size),
         "--overlap", str(overlap)
     ]
     
-    print(f"\n🚀 Running: {' '.join(cmd)}")
+    print(f"\n🚀 Scanning {scan_dir}...")
     
     try:
-        subprocess.run(cmd, check=True)
-        config.add_recent_output_dir(out_dir)
+        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        config.add_recent_output_dir(str(out_dir))
         print(f"\n✅ Scan complete! Results saved to: {out_dir}")
+        
+        # Show quick summary
+        if result.stderr:
+            print("\n📊 Processing Summary:")
+            for line in result.stderr.split('\n'):
+                if 'Processed:' in line:
+                    print(f"   {line.strip()}")
+                    
     except subprocess.CalledProcessError as e:
-        print(f"❌ Scan failed: {e}")
+        print(f"❌ Scan failed with code {e.returncode}")
+        if e.stderr:
+            print(f"Error details: {e.stderr}")
     except KeyboardInterrupt:
         print("\n❌ Scan cancelled")
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
 
 
 def run_watch():
@@ -438,13 +478,93 @@ def show_help():
     print("  python -m app.live_cli --help")
 
 
+def quick_scan(scan_dir, out_dir=None, exts=None):
+    """Quick scan function for CLI usage."""
+    scan_path, error = validate_directory(scan_dir, "Scan directory")
+    if error:
+        print(error)
+        return False
+    
+    # Use defaults if not specified
+    config = get_config()
+    if not out_dir:
+        out_dir = config.get_default_output_dir()
+    if not exts:
+        exts = ",".join(config.get_default_extensions())
+    
+    # Create output directory
+    out_path = Path(out_dir).expanduser().resolve()
+    try:
+        out_path.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        print(f"❌ Cannot create output directory: {e}")
+        return False
+    
+    # Run scan
+    cmd = [
+        sys.executable, "-m", "app.scanner_cli",
+        "scan", str(scan_path),
+        "--out", str(out_path),
+        "--exts", exts
+    ]
+    
+    try:
+        print(f"🚀 Scanning {scan_path}...")
+        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        config.add_recent_output_dir(str(out_path))
+        print(f"✅ Scan complete! Results saved to: {out_path}")
+        
+        # Show summary
+        if result.stderr:
+            for line in result.stderr.split('\n'):
+                if 'Processed:' in line:
+                    print(f"📊 {line.strip()}")
+        return True
+        
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Scan failed with code {e.returncode}")
+        if e.stderr:
+            print(f"Error: {e.stderr}")
+        return False
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return False
+
 def main():
     """Main launcher function."""
+    # Check for command line arguments
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "--help" or sys.argv[1] == "-h":
+            print("🔍 PII Scanner - Quick Usage")
+            print("=" * 30)
+            print("Interactive mode: python pii_launcher.py")
+            print("Quick scan: python pii_launcher.py [scan_directory] [output_directory]")
+            print("Examples:")
+            print("  python pii_launcher.py /home/user/documents")
+            print("  python pii_launcher.py /tmp ./results")
+            return
+        
+        # Quick scan mode
+        scan_dir = sys.argv[1]
+        out_dir = sys.argv[2] if len(sys.argv) > 2 else None
+        
+        print_banner()
+        if quick_scan(scan_dir, out_dir):
+            print("\n🎉 Quick scan completed successfully!")
+        else:
+            print("\n❌ Quick scan failed!")
+        return
+    
+    # Interactive mode
     print_banner()
     
     while True:
         print_menu()
-        choice = input("\nEnter choice (1-9): ").strip()
+        try:
+            choice = input("\nEnter choice (1-9): ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\n\n👋 Goodbye!")
+            break
         
         if choice == "1":
             run_scan()
@@ -468,7 +588,11 @@ def main():
         else:
             print("❌ Invalid choice. Please enter 1-9.")
         
-        input("\nPress Enter to continue...")
+        try:
+            input("\nPress Enter to continue...")
+        except (EOFError, KeyboardInterrupt):
+            print("\n\n👋 Goodbye!")
+            break
 
 
 if __name__ == "__main__":

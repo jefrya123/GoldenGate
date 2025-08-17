@@ -41,6 +41,14 @@ class SimplifiedControlledDetector:
         """Classify entity using simplified Controlled vs NonControlled approach."""
         if entity_type == "ID":
             return "Controlled", 0.95  # SSN is always Controlled
+        elif entity_type == "DRIVER_LICENSE":
+            return "Controlled", 0.9   # Driver licenses are US-based
+        elif entity_type == "EIN":
+            return "Controlled", 0.95  # EIN is always US
+        elif entity_type == "ZIP":
+            return "Controlled", 0.9   # ZIP codes are US
+        elif entity_type == "CREDIT_CARD":
+            return "NonControlled", 0.8  # Credit cards are global
         
         value_lower = value.lower()
         context_lower = context.lower()
@@ -55,60 +63,105 @@ class SimplifiedControlledDetector:
             return "NonControlled", 0.5
 
     def _classify_phone(self, phone: str, context: str) -> Tuple[str, float]:
-        # Clear Controlled indicators
-        for indicator in self.controlled_indicators['phone']:
-            if indicator in phone:
-                return "Controlled", 0.9
+        # Smart phone classification based on patterns, not hardcoded lists
         
-        # Clear NonControlled indicators
-        for indicator in self.noncontrolled_indicators['phone']:
-            if indicator in phone:
-                return "NonControlled", 0.9
+        # US format: +1 or starts with 1, followed by 10 digits
+        if re.search(r'^\+?1[\s\-\.]?\(?[2-9]\d{2}\)?[\s\-\.]?\d{3}[\s\-\.]?\d{4}$', phone):
+            return "Controlled", 0.95
         
-        # Check if it's a 10-digit Controlled number
+        # International format: +XX (any non-1 country code)
+        if re.search(r'^\+(?!1\b)\d{1,4}[\s\-\.]?\d', phone):
+            return "NonControlled", 0.9
+        
+        # Clean digits only analysis
         cleaned = re.sub(r'[^\d]', '', phone)
-        if len(cleaned) == 10 or (len(cleaned) == 11 and cleaned.startswith('1')):
+        
+        # 10 digits starting with valid area code = likely US
+        if len(cleaned) == 10 and cleaned[0] in '23456789':
             return "Controlled", 0.8
         
-        # Default to Controlled (more common in Controlled-based systems)
-        return "Controlled", 0.6
+        # 11 digits starting with 1 = US with country code
+        if len(cleaned) == 11 and cleaned.startswith('1'):
+            return "Controlled", 0.85
+        
+        # More than 11 digits = likely international
+        if len(cleaned) > 11:
+            return "NonControlled", 0.75
+        
+        # Less than 10 digits = incomplete/invalid
+        if len(cleaned) < 10:
+            return "NonControlled", 0.6
+        
+        # Default fallback
+        return "Controlled", 0.5
 
     def _classify_address(self, address: str, context: str) -> Tuple[str, float]:
-        address_lower = address.lower()
+        # Smart address classification using pattern recognition
         
-        # Clear Controlled indicators
-        for city in self.controlled_indicators['address']:
-            if city in address_lower:
-                return "Controlled", 0.9
+        # Definitive US indicators: State abbreviations with ZIP
+        if re.search(r'\b[A-Z]{2}\s+\d{5}(?:-\d{4})?\b', address):
+            return "Controlled", 0.95
         
-        for state in self.controlled_indicators['state']:
-            if f', {state}' in address or f', {state} ' in address:
-                return "Controlled", 0.9
+        # Definitive international postal formats
+        patterns = [
+            (r'\b[A-Z]{1,2}\d{1,2}[A-Z]?\s+\d[A-Z]{2}\b', 0.95),  # UK: SW1A 2AA
+            (r'\b[A-Z]\d[A-Z]\s+\d[A-Z]\d\b', 0.95),              # Canada: K1A 0A6
+            (r'\b\d{4}\s*[A-Z]{2}\b', 0.9),                        # Netherlands: 1000 AB
+            (r'\b\d{5}\s+[A-Z][a-z]{2,}\b', 0.85),                # Europe: 75001 Paris
+        ]
         
-        if re.search(self.controlled_indicators['zip'], address):
+        for pattern, confidence in patterns:
+            if re.search(pattern, address):
+                return "NonControlled", confidence
+        
+        # Smart linguistic analysis - non-English address components
+        non_english_patterns = [
+            r'\b(?:rue|via|straße|strasse|avenida|boulevard)\b',   # Street types
+            r'\b(?:platz|gatan|vägen|corso|rua|calle)\b',          # More street types
+            r'\b(?:postbus|boîte|casella)\b',                      # PO Box equivalents
+        ]
+        
+        for pattern in non_english_patterns:
+            if re.search(pattern, address, re.IGNORECASE):
+                return "NonControlled", 0.8
+        
+        # Check for obvious country/region indicators
+        if re.search(r'\b(?:uk|united kingdom|canada|australia|germany|france|italy|spain|netherlands|sweden|norway|denmark|finland|belgium|austria|switzerland)\b', address, re.IGNORECASE):
+            return "NonControlled", 0.85
+        
+        # US-style address format: Number + Street + City, State ZIP
+        us_format = r'\b\d+\s+[A-Za-z\s]+(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|way|court|ct|place|pl)\b'
+        if re.search(us_format, address, re.IGNORECASE):
+            return "Controlled", 0.75
+        
+        # Just a ZIP code alone (5 or 5+4 digits)
+        if re.search(r'^\d{5}(?:-\d{4})?$', address.strip()):
             return "Controlled", 0.9
         
-        # Clear NonControlled indicators
-        for city in self.noncontrolled_indicators['address']:
-            if city in address_lower:
-                return "NonControlled", 0.9
-        
-        for country, pattern in self.noncontrolled_indicators['postal_codes'].items():
-            if re.search(pattern, address):
-                return "NonControlled", 0.9
-        
-        # Default to Controlled (more common in Controlled-based systems)
-        return "Controlled", 0.6
+        # Default: if no clear indicators, lean towards US for domestic systems
+        return "Controlled", 0.5
 
     def _classify_email(self, email: str, context: str) -> Tuple[str, float]:
-        email_lower = email.lower()
+        # Smart email classification using pattern recognition
         
-        # Clear NonControlled indicators
-        for domain in self.noncontrolled_indicators['domains']:
-            if domain in email_lower:
-                return "NonControlled", 0.9
+        # US government/official domains (high confidence US)
+        if re.search(r'\.(?:gov|mil|edu)$', email, re.IGNORECASE):
+            return "Controlled", 0.95
         
-        # Default to NonControlled for emails (global nature)
+        # Country-specific TLDs (two-letter country codes)
+        if re.search(r'\.(?!com|org|net|info|biz)[a-z]{2}$', email, re.IGNORECASE):
+            return "NonControlled", 0.9
+        
+        # Generic TLDs - analyze context
+        if re.search(r'\.(?:com|org|net|info|biz)$', email, re.IGNORECASE):
+            # Check context for international indicators
+            intl_context = re.search(r'\b(?:international|global|worldwide|europe|asia|foreign|overseas|uk|canada|australia)\b', context, re.IGNORECASE)
+            if intl_context:
+                return "NonControlled", 0.7
+            # Default to US for generic domains in US-focused context
+            return "Controlled", 0.65
+        
+        # Unknown/new TLDs - lean international
         return "NonControlled", 0.6
 
 # Global detector instance

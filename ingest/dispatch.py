@@ -43,4 +43,32 @@ def iter_file_text(
         yield from iter_pdf_pages(path, max_pages=pdf_max_pages)
     else:
         # All other extensions are treated as text files
-        yield from iter_text_chunks(path, chunk_bytes=text_chunk_bytes) 
+        yield from iter_text_chunks(path, chunk_bytes=text_chunk_bytes)
+
+def extract_text_stream(path: Path, chunk_size: int = 10000) -> Iterator[str]:
+    """
+    Simple streaming text extraction for any file type.
+    
+    Args:
+        path: Path to file
+        chunk_size: Size of text chunks
+        
+    Yields:
+        Text chunks from the file
+    """
+    try:
+        # Use the existing dispatch function
+        for text_chunk in iter_file_text(path, text_chunk_bytes=chunk_size):
+            yield text_chunk
+    except Exception as e:
+        print(f"Warning: Could not extract text from {path}: {e}")
+        # Fallback: try reading as plain text
+        try:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                while True:
+                    chunk = f.read(chunk_size)
+                    if not chunk:
+                        break
+                    yield chunk
+        except:
+            pass  # Give up silently 

@@ -70,4 +70,10 @@ pii_results/
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+
+# Test directories and outputs
+*_test/
+*_results/
+demo_results/
+test_files/ 
