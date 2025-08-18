@@ -8,6 +8,7 @@ import subprocess
 import os
 from pathlib import Path
 from app.config import get_config
+from config import FEATURES
 
 
 def print_banner():
@@ -52,6 +53,10 @@ def run_scan():
     print("\n🔍 One-Time Scan")
     print("-" * 30)
     
+    # Ask if user wants enhanced performance mode
+    use_enhanced = input("Use enhanced scanner (faster, multi-threaded)? [Y/n]: ").strip().lower()
+    use_enhanced = use_enhanced != 'n'
+    
     # Get scan directory
     scan_dir_input = input("Enter directory to scan: ").strip()
     scan_dir, error = validate_directory(scan_dir_input, "Scan directory")
@@ -95,38 +100,64 @@ def run_scan():
     else:
         overlap = int(overlap)
     
-    # Build command
-    cmd = [
-        sys.executable, "-m", "app.scanner_cli",
-        "scan", str(scan_dir),
-        "--out", str(out_dir),
-        "--exts", exts,
-        "--chunk-size", str(chunk_size),
-        "--overlap", str(overlap)
-    ]
-    
-    print(f"\n🚀 Scanning {scan_dir}...")
-    
-    try:
-        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
-        config.add_recent_output_dir(str(out_dir))
-        print(f"\n✅ Scan complete! Results saved to: {out_dir}")
+    if use_enhanced:
+        # Use enhanced scanner directly
+        print(f"\n🚀 Enhanced Scanning {scan_dir}...")
+        print("  Multi-threading: Enabled")
+        print("  Smart filtering: Enabled")
         
-        # Show quick summary
-        if result.stderr:
-            print("\n📊 Processing Summary:")
-            for line in result.stderr.split('\n'):
-                if 'Processed:' in line:
-                    print(f"   {line.strip()}")
-                    
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Scan failed with code {e.returncode}")
-        if e.stderr:
-            print(f"Error details: {e.stderr}")
-    except KeyboardInterrupt:
-        print("\n❌ Scan cancelled")
-    except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        try:
+            from app.scanner_enhanced import EnhancedScanner
+            extensions_set = set('.' + ext.strip().lstrip('.') for ext in exts.split(','))
+            scanner = EnhancedScanner(out_dir, extensions=extensions_set)
+            stats = scanner.scan(scan_dir)
+            
+            config.add_recent_output_dir(str(out_dir))
+            print(f"\n✅ Scan complete! Results saved to: {out_dir}")
+            print(f"\n📊 Processing Summary:")
+            print(f"   Files scanned: {stats['files_scanned']}")
+            print(f"   Files with PII: {stats['files_with_pii']}")
+            print(f"   Total PII found: {stats['total_pii_found']}")
+            print(f"   Time taken: {stats.get('scan_duration', 0):.1f} seconds")
+            
+        except Exception as e:
+            print(f"❌ Enhanced scan failed: {e}")
+            print("Falling back to standard scanner...")
+            use_enhanced = False
+    
+    if not use_enhanced:
+        # Build command for standard scanner
+        cmd = [
+            sys.executable, "-m", "app.scanner_cli",
+            "scan", str(scan_dir),
+            "--out", str(out_dir),
+            "--exts", exts,
+            "--chunk-size", str(chunk_size),
+            "--overlap", str(overlap)
+        ]
+        
+        print(f"\n🚀 Scanning {scan_dir}...")
+        
+        try:
+            result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+            config.add_recent_output_dir(str(out_dir))
+            print(f"\n✅ Scan complete! Results saved to: {out_dir}")
+            
+            # Show quick summary
+            if result.stderr:
+                print("\n📊 Processing Summary:")
+                for line in result.stderr.split('\n'):
+                    if 'Processed:' in line:
+                        print(f"   {line.strip()}")
+                        
+        except subprocess.CalledProcessError as e:
+            print(f"❌ Scan failed with code {e.returncode}")
+            if e.stderr:
+                print(f"Error details: {e.stderr}")
+        except KeyboardInterrupt:
+            print("\n❌ Scan cancelled")
+        except Exception as e:
+            print(f"❌ Unexpected error: {e}")
 
 
 def run_watch():

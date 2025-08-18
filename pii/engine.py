@@ -3,11 +3,17 @@ PII Detection Engine - Enhanced Presidio Integration
 """
 
 import re
+import sys
+from pathlib import Path
 from typing import List, Optional
 from presidio_analyzer import AnalyzerEngine, Pattern, PatternRecognizer, RecognizerResult
 from presidio_analyzer.nlp_engine import NlpEngineProvider, NlpArtifacts
 from .schema import EntityHit
 from .classifier import classify_label
+
+# Add parent to path for config import
+sys.path.append(str(Path(__file__).parent.parent))
+from config import FEATURES
 
 class EnhancedRobustRecognizer(PatternRecognizer):
     """Enhanced recognizer with overlapping result filtering."""
@@ -185,6 +191,15 @@ def _process_with_presidio(analyzer: AnalyzerEngine, text: str, chunk_size: int,
     chunks = _chunk(text, chunk_size, overlap)
     all_hits = []
     
+    # Initialize validator if context validation is enabled
+    validator = None
+    if FEATURES.get('context_validation', True):
+        try:
+            from .validator import ContextValidator
+            validator = ContextValidator()
+        except ImportError:
+            pass
+    
     for i, chunk in enumerate(chunks):
         try:
             results = analyzer.analyze(
@@ -207,6 +222,19 @@ def _process_with_presidio(analyzer: AnalyzerEngine, text: str, chunk_size: int,
                 
                 # Classify the entity using only chunk context (memory efficient)
                 chunk_context = chunk[max(0, result.start - 100):min(len(chunk), result.end + 100)]
+                
+                # Validate if validator is available
+                adjusted_score = result.score
+                if validator:
+                    is_valid, adjusted_score = validator.validate_entity(
+                        result.entity_type,
+                        entity_text,
+                        chunk_context,
+                        result.score
+                    )
+                    if not is_valid:
+                        continue  # Skip this detection
+                
                 label = classify_label(
                     result.entity_type,
                     entity_text,
@@ -220,7 +248,7 @@ def _process_with_presidio(analyzer: AnalyzerEngine, text: str, chunk_size: int,
                     value=entity_text,
                     start=chunk_offset + result.start,
                     end=chunk_offset + result.end,
-                    score=result.score,
+                    score=adjusted_score,
                     label=label,
                     context_left=context_left,
                     context_right=context_right
