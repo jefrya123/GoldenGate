@@ -1,0 +1,67 @@
+#!/bin/bash
+# Check status of PII scan
+
+OUTPUT_DIR="${1:-pii_scan_results}"
+
+echo "📊 PII SCAN STATUS"
+echo "=================================================="
+echo ""
+
+# Check if scan is running
+if [ -f "$OUTPUT_DIR/.scan_pid" ]; then
+    PID=$(cat "$OUTPUT_DIR/.scan_pid")
+    
+    if ps -p $PID > /dev/null 2>&1; then
+        echo "🟢 SCAN IN PROGRESS"
+        echo "   Process ID: $PID"
+        echo ""
+        
+        # Show current progress
+        if [ -f "$OUTPUT_DIR/summary.csv" ]; then
+            FILE_COUNT=$(tail -n +2 "$OUTPUT_DIR/summary.csv" 2>/dev/null | wc -l)
+            echo "   Files scanned so far: $FILE_COUNT"
+            
+            # Show last few files scanned
+            echo "   Recent files:"
+            tail -n 3 "$OUTPUT_DIR/summary.csv" | while IFS=',' read -r file rest; do
+                if [ "$file" != "file" ]; then
+                    basename "$file" | sed 's/^/      - /'
+                fi
+            done
+        fi
+        
+        echo ""
+        echo "📚 Commands:"
+        echo "   View partial results:  ./view"
+        echo "   Stop scan:            kill $PID"
+    else
+        echo "⚠️ SCAN COMPLETED OR STOPPED"
+        echo "   Last process ID: $PID (not running)"
+        rm "$OUTPUT_DIR/.scan_pid"
+        
+        if [ -f "$OUTPUT_DIR/summary.csv" ]; then
+            FILE_COUNT=$(tail -n +2 "$OUTPUT_DIR/summary.csv" 2>/dev/null | wc -l)
+            echo "   Total files scanned: $FILE_COUNT"
+        fi
+        
+        echo ""
+        echo "📚 Commands:"
+        echo "   View results:  ./view"
+    fi
+else
+    echo "❌ NO ACTIVE SCAN"
+    
+    if [ -d "$OUTPUT_DIR" ] && [ -f "$OUTPUT_DIR/summary.csv" ]; then
+        FILE_COUNT=$(tail -n +2 "$OUTPUT_DIR/summary.csv" 2>/dev/null | wc -l)
+        echo "   Previous scan results available: $FILE_COUNT files"
+        echo ""
+        echo "📚 Commands:"
+        echo "   View results:     ./view"
+        echo "   Start new scan:   ./scan"
+    else
+        echo "   No previous results found"
+        echo ""
+        echo "📚 Commands:"
+        echo "   Start new scan:   ./scan"
+    fi
+fi

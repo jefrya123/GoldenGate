@@ -1,175 +1,202 @@
-# 🚀 QUICK START - PII Scanner
+# Quick Start Guide
 
-## ⚡ SUPER EASY 3-STEP SETUP
+## Prerequisites
 
-### Step 1: One-Command Setup
+Make sure you've installed the scanner first. See [INSTALL.md](INSTALL.md) for detailed instructions.
+
+## 🚀 Basic Usage
+
+### Three Commands You Need
 ```bash
-./deploy.sh
+./scan    # Start scanning
+./view    # View results (even during scanning!)
+./status  # Check scan progress
 ```
-**That's it!** This installs everything automatically.
 
-### Step 2: Run the Scanner
+## 📋 Step-by-Step Guide
+
+### Step 1: Start a Scan
 ```bash
-python easy_launcher.py
+./scan
 ```
-**Follow the prompts** - it will ask you what to scan and where to save results.
 
-### Step 3: View Your Results
-The scanner will show you exactly where your results are saved and how to view them.
+You'll see three options:
+```
+1. One-time scan (wait for completion)
+2. Background scan (run in background, view results anytime)
+3. Monitor folder (continuously watch for new files)
+```
+
+### Step 2: Choose What to Scan
+Enter the path to scan:
+- `demo_files` - Test with sample files
+- `/home/user/documents` - Scan your documents
+- `.` - Scan current directory
+
+### Step 3: Choose Output Location
+- Press Enter for default (`pii_scan_results`)
+- Or specify custom path
+
+### Step 4: View Results
+```bash
+./view
+```
+
+Choose viewing option:
+1. Quick summary - File counts and severity
+2. Detailed view - See actual findings
+3. Export to CSV - For Excel
+
+## 🎯 Usage Examples
+
+### Quick Test
+```bash
+./scan
+# Choose: 1
+# Path: demo_files
+# Output: (press Enter)
+```
+
+### Background Scan (Large Directories)
+```bash
+./scan
+# Choose: 2
+# Path: /large/directory
+# Output: (press Enter)
+
+# While scanning:
+./status  # Check progress
+./view    # See results so far
+```
+
+### Monitor Folder (Continuous)
+```bash
+./scan
+# Choose: 3
+# Path: /dropbox/incoming
+# Output: monitoring_results
+```
+
+## 📊 Understanding Output
+
+### Status Command
+```bash
+./status
+```
+Shows:
+- If scan is running
+- Process ID
+- Files scanned so far
+- Recent files processed
+
+### View Command
+```bash
+./view
+```
+Options:
+1. **Summary** - Table with file counts
+2. **Detailed** - Interactive explorer
+3. **Export** - Save to CSV
+
+### Output Files
+Located in `pii_scan_results/`:
+- `summary.csv` - Main results file
+- `entities-*.jsonl` - Detailed data
+- `.scan_pid` - Process tracking (temporary)
+
+## 💡 Pro Tips
+
+### For Large Scans
+Use background mode (option 2) to:
+- Continue using terminal
+- Check results while scanning
+- Stop anytime with `kill [PID]`
+
+### For Real-Time Monitoring
+Use monitor mode (option 3) to:
+- Watch a folder continuously
+- Auto-scan new files
+- Perfect for upload directories
+
+### View Results During Scanning
+```bash
+# Start background scan
+./scan
+# Choose: 2
+
+# In another terminal or later:
+./view  # Results update in real-time!
+```
+
+### Watch Results Update Live
+```bash
+# After starting background scan:
+watch -n 2 './status'  # Updates every 2 seconds
+```
+
+## 🛠️ Advanced Commands
+
+### Direct Command Line Scan
+```bash
+venv/bin/python pii_launcher.py /path/to/scan ./output
+```
+
+### Status Check
+```bash
+venv/bin/python -m app.status_cli --out ./pii_scan_results
+```
+
+### Results Explorer
+```bash
+venv/bin/python -m app.results_explorer --out ./pii_scan_results
+```
+
+### Export Results
+```bash
+venv/bin/python -m app.results_explorer --out ./pii_scan_results <<< "1"
+```
+
+## ⚡ Keyboard Shortcuts
+
+During scanning:
+- `Ctrl+C` - Stop scan
+- `Ctrl+Z` - Suspend (use `fg` to resume)
+
+During viewing:
+- `q` - Quit viewer
+- Numbers - Select options
+
+## 🔧 Troubleshooting
+
+### Scan Won't Start
+```bash
+./setup.sh  # Reinstall dependencies
+```
+
+### Can't View Results
+```bash
+ls pii_scan_results/  # Check if results exist
+./status              # Check if scan is running
+```
+
+### Permission Denied
+```bash
+chmod +x scan view status setup.sh
+```
+
+### Python Errors
+```bash
+python3 --version  # Should be 3.11+
+./setup.sh         # Reinstall
+```
+
+## 📝 Notes
+
+- Results are saved incrementally during scanning
+- Background scans continue even if terminal closes
+- Monitor mode runs until you stop it with Ctrl+C
+- All commands work without manual activation
 
 ---
 
-## 🎯 DIFFERENT WAYS TO USE IT
-
-### 🔥 Super Easy Mode (Recommended for beginners)
-```bash
-python easy_launcher.py
-```
-- **Walks you through everything step-by-step**
-- **No technical knowledge needed**
-- **Explains what it finds**
-
-### ⚡ Quick Mode (For repeat users)
-```bash
-python pii_launcher.py /path/to/scan ./results
-```
-- **One command, done**
-- **Perfect for regular use**
-
-### 🔄 Background Monitoring (For servers/VMs)
-```bash
-python -m app.scanner_cli watch /path/to/monitor --out ./results --poll-seconds 30
-```
-- **Continuously monitors a folder**
-- **Perfect for VMs and servers**
-- **Automatically scans new files**
-
----
-
-## 📊 WHAT DOES IT FIND?
-
-### 🏛️ Controlled Information
-- ✅ ID Numbers: `123-45-6789`
-- ✅ Controlled Phone Numbers: `(555) 123-4567`
-- ✅ Controlled Addresses: `123 Main St, Boston, MA 02101`
-- ✅ Controlled Government Emails: `admin@agency.gov`
-- ✅ Driver Licenses, ZIP codes, EIN numbers
-
-### 🌍 NonControlled Information
-- ✅ International Phones: `+44 20 7946 0958`
-- ✅ NonControlled Addresses: `10 Downing St, London, UK`
-- ✅ Country Domains: `contact@company.co.uk`
-- ✅ International Postal Codes
-- ✅ Social Media Handles: `@username`, LinkedIn profiles
-
-### 💳 Global Information
-- ✅ Credit Card Numbers (all countries)
-- ✅ Email addresses (automatically classified)
-
----
-
-## 📁 WHAT FILE TYPES WORK?
-
-**The scanner works with ANY file type:**
-- 📄 Text files (`.txt`, `.log`, `.md`)
-- 📊 Spreadsheets (`.csv`, Excel files)
-- 📋 PDFs (searchable text)
-- 🌐 Web files (`.html`, `.xml`, `.json`)
-- 🔍 **Even 5GB+ files!** (automatically optimized)
-
----
-
-## 📊 UNDERSTANDING YOUR RESULTS
-
-### Main Results File: `summary.csv`
-Open this in Excel or Google Sheets to see:
-- **File names** with PII detected
-- **Count of PII items** found in each file
-- **Risk levels** (Critical/Medium/Low)
-- **Controlled vs NonControlled** breakdown
-
-### Detailed Files: `entities-*.jsonl`
-These contain the exact PII found with:
-- **What was found** (the actual text)
-- **Where it was found** (location in file)
-- **Confidence level** (how sure we are)
-- **Context** (surrounding text)
-
----
-
-## 🆘 TROUBLESHOOTING
-
-### ❌ "Virtual environment not found"
-**Fix:** Run `python setup.py` or `./deploy.sh`
-
-### ❌ "Permission denied"
-**Fix:** Make sure you can read the files/folders you're trying to scan
-
-### ❌ "Scan failed"
-**Fix:** 
-1. Check that the path exists
-2. Make sure you have enough disk space
-3. Try a smaller folder first
-
-### ❌ "Out of memory"
-**Fix:** The scanner automatically handles large files, but for HUGE datasets:
-```bash
-python -m app.scanner_cli scan /path --chunk-size 2000 --overlap 100
-```
-
----
-
-## 💡 PRO TIPS
-
-### 🔍 For Large Files (100MB+)
-The scanner automatically detects large files and uses optimized processing. Just run normally!
-
-### 🔄 For Continuous Monitoring
-```bash
-# Monitor a folder every 30 seconds
-python -m app.scanner_cli watch /dropbox/incoming --out ./monitoring --poll-seconds 30
-```
-
-### 📊 Quick Results Check
-```bash
-python -m app.status_cli --out ./results
-```
-
-### 🔎 Detailed File Analysis
-```bash
-python -m app.detail_cli --out ./results --file suspicious_file.txt
-```
-
----
-
-## 🔒 PRIVACY & SECURITY
-
-- ✅ **Everything stays on your computer** - nothing is uploaded
-- ✅ **No network access required** - works completely offline
-- ✅ **Open source** - you can see exactly what it does
-- ✅ **No data storage** - results are only saved where you choose
-
----
-
-## 🎯 EXAMPLES
-
-### Example 1: Scan Documents Folder
-```bash
-python easy_launcher.py
-# When prompted: /home/user/Documents
-# When prompted: ./document_scan_results
-```
-
-### Example 2: Quick CSV Scan
-```bash
-python pii_launcher.py /path/to/data.csv ./csv_results
-```
-
-### Example 3: Monitor Upload Folder
-```bash
-python -m app.scanner_cli watch /upload/incoming --out ./monitoring
-```
-
----
-
-**Need help?** Just run `python easy_launcher.py` - it explains everything!
+For installation help, see [INSTALL.md](INSTALL.md)
