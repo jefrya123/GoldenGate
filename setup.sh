@@ -28,9 +28,9 @@ fi
 echo ""
 echo "✅ Setup complete!"
 echo ""
-echo "🚀 To get started:"
-echo "1. Activate the environment: source venv/bin/activate"
-echo "2. Run the easy launcher: python easy_launcher.py"
-echo "3. Or quick scan: python pii_launcher.py /path/to/scan"
+echo "🚀 Starting scanner..."
 echo ""
-echo "📚 For detailed instructions, see QUICK_START.md"
+
+# Auto-activate and run
+source venv/bin/activate
+python easy_launcher.py

@@ -1,205 +1,152 @@
-# 🔍 PII Scanner - Personal Information Identifier
+# GoldenGate PII Scanner
 
-A rock-solid PII (Personally Identifiable Information) detection system with 90%+ accuracy, powered by Microsoft Presidio with enhanced custom recognizers and intelligent US vs foreign classification.
+Fast, accurate PII (Personally Identifiable Information) scanner with smart classification.
 
-## ✨ Key Features
+## ⚡ Quick Start
 
-- **🎯 90%+ Accuracy**: Enhanced Presidio integration with robust pattern matching
-- **🔍 Advanced PII Detection**: SSN, credit cards, phones, emails, addresses, EIN, ZIP codes, driver licenses
-- **🏷️ Smart Classification**: "Controlled" (US-based) vs "NonControlled" (foreign) with context analysis
-- **📁 Multi-Format Support**: Text files, PDFs, CSVs, logs, markdown, HTML with streaming processing
-- **⚡ Memory Efficient**: Chunked processing handles files of any size
-- **🚀 Super Easy Deployment**: One-command setup with comprehensive testing
-- **👀 Continuous Monitoring**: Watch directories for new/changed files
-- **📊 Rich Results**: Interactive exploration, CSV/JSON export, detailed reporting
-- **⚙️ User-Friendly**: Simple launcher + command-line modes with robust error handling
-
-## 🚀 SUPER EASY SETUP (3 steps!)
-
-### Step 1: Install Everything
+### Linux/macOS
 ```bash
-./deploy.sh
-```
-**Done!** This installs everything automatically.
+# One-time setup (no git required!)
+wget https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip
+unzip GoldenGate-main.zip
+cd GoldenGate-main
+chmod +x scan view status setup.sh
+./setup.sh
 
-### Step 2: Start Scanning
-```bash
-python easy_launcher.py
-```
-**Follow the prompts!** It will guide you through everything.
-
-### Step 3: View Results
-The scanner shows you exactly where results are saved and how to view them.
-
----
-
-## ⚡ OTHER WAYS TO USE IT
-
-### 🔥 Quick Mode (One Command)
-```bash
-python pii_launcher.py /path/to/scan ./results
+# Use the scanner
+./scan    # Start scanning
+./view    # View results
+./status  # Check scan progress
 ```
 
-### 🔄 Background Monitoring (For VMs)
+### Windows
+See [INSTALL.md](INSTALL.md) for Windows installation instructions.
+
+## 📦 Installation
+
+**Full installation guide**: [INSTALL.md](INSTALL.md)
+
+### System Requirements
+- Python 3.11 or higher
+- 2GB RAM minimum
+- 500MB disk space
+
+### Quick Install (Linux/macOS)
+
+**Option 1: One-Line Install (No Git)**
 ```bash
-python -m app.scanner_cli watch /path/to/monitor --out ./results --poll-seconds 30
+# Everything in one command
+sudo apt update && sudo apt install -y python3 python3-pip python3-venv wget unzip && \
+wget https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip && \
+unzip GoldenGate-main.zip && cd GoldenGate-main && \
+chmod +x scan view status setup.sh && ./setup.sh
 ```
 
-### 📊 View Previous Results
+**Option 2: With Git**
 ```bash
-python -m app.status_cli --out ./results
+sudo apt install -y python3 python3-pip python3-venv git
+git clone https://gitlab.com/yourusername/GoldenGate.git
+cd GoldenGate
+./setup.sh
 ```
 
-**👉 See [QUICK_START.md](QUICK_START.md) for detailed instructions!**
+## 🚀 Usage
 
-## 💡 Usage Examples
-
-**Quick document scan:**
+### Three Simple Commands
 ```bash
-python pii_launcher.py ~/Documents ./pii_results
+./scan    # Start scanning
+./view    # View results (works during scanning!)
+./status  # Check if scan is running
 ```
 
-**Government compliance audit:**
+### Scan Modes
+
+When you run `./scan`, choose from:
+1. **One-time scan** - Wait for completion
+2. **Background scan** - Run in background, view results anytime
+3. **Monitor folder** - Continuously watch for new files
+
+### Example Usage
+
 ```bash
-python -m app.scanner_cli scan /shared/documents --out ./audit_results --exts ".txt,.pdf,.csv,.docx"
+# Quick scan
+./scan
+> Choose: 1 (One-time scan)
+> Path: /home/user/documents
+> Output: (press Enter for default)
+
+# Background scan for large directories
+./scan
+> Choose: 2 (Background scan)
+> Path: /mnt/large_storage
+> Output: (press Enter)
+
+# Then check progress
+./status
+./view
 ```
 
-**Continuous monitoring:**
+## 📊 Viewing Results
+
+### Quick Summary
 ```bash
-python -m app.scanner_cli watch /dropbox/incoming --out ./monitoring --poll-seconds 30
+./view
+> Choose: 1
 ```
+Shows file counts and severity levels.
 
-## 📋 Detected PII Types (Enhanced Presidio Integration)
-
-### Always Controlled (US-based)
-- **Social Security Numbers** (SSN): 123-45-6789, 123 45 6789, 123.45.6789
-- **Employer Identification Numbers** (EIN): 12-3456789
-- **US ZIP Codes**: 12345, 12345-6789
-- **Driver License Numbers**: State-specific patterns
-
-### Intelligently Classified
-- **Phone Numbers**: 
-  - US: (555) 123-4567, +1-555-123-4567 → Controlled
-  - International: +44 20 7946 0958, +81-3-1234-5678 → NonControlled
-- **Addresses**: 
-  - US: "123 Main St, New York, NY 10001" → Controlled
-  - Foreign: "10 Downing Street, London SW1A 2AA, UK" → NonControlled
-- **Email Addresses**: Domain-based classification (.gov, .edu vs .co.uk, .de)
-
-### Always NonControlled (Global)
-- **Credit Card Numbers**: Visa, Mastercard, Amex (with Luhn validation)
-
-### Advanced Features
-- **Context Analysis**: Surrounding text provides classification clues
-- **False Positive Reduction**: Smart pattern matching avoids dates, IDs
-- **Multiple Formats**: Handles various formatting styles
-- **Overlapping Detection**: Eliminates duplicate matches
-
-## 🛠️ Advanced Usage
-
-### Command Line Interface
-
-**One-time scan:**
+### Detailed View
 ```bash
-python -m app.scanner_cli scan /path/to/documents --out ./results --exts ".txt,.pdf,.csv"
+./view
+> Choose: 2
 ```
-
-**Continuous monitoring:**
-```bash
-python -m app.scanner_cli watch /path/to/documents --out ./results --poll-seconds 10
-```
-
-**View results:**
-```bash
-python -m app.status_cli --out ./results
-python -m app.live_cli --out ./results
-```
-
-**Explore results:**
-```bash
-python -m app.results_explorer --out ./results
-```
-
-**View file details:**
-```bash
-python -m app.detail_cli --out ./results --file document.txt
-python -m app.detail_cli --out ./results --file document.txt --export-csv
-```
-
-### Discover Output Directories
-```bash
-python -m app.results_explorer --discover
-```
+Shows actual PII found with context.
 
 ### Export Results
 ```bash
-python -m app.results_explorer --export-csv ./results
-python -m app.results_explorer --export-json ./results
+./view
+> Choose: 3
+```
+Exports to CSV for Excel.
+
+## 📁 Output Files
+
+Results are saved in `pii_scan_results/`:
+- `summary.csv` - Overview for Excel
+- `entities-*.jsonl` - Detailed findings
+
+## 🛠️ Advanced Usage
+
+### Command Line Mode
+```bash
+venv/bin/python pii_launcher.py /path/to/scan ./output
 ```
 
-## 📁 Output Structure
-
-```
-results/
-├── summary.csv              # Scan summary with statistics
-├── entities-{hash}.jsonl    # Detailed entity data per file
-├── .summary_index.json      # Deduplication index
-└── .seen.json              # File tracking
+### Continuous Monitoring
+```bash
+venv/bin/python -m app.scanner_cli watch /path --out ./output --poll-seconds 30
 ```
 
-## ⚙️ Configuration
+### Custom Output Directory
+```bash
+./scan
+> Output: /custom/path/results
+```
 
-The system automatically saves your preferences:
-- Default output directories
-- File extensions to scan
-- Chunk sizes for memory management
-- Polling intervals for monitoring
+## 🆘 Troubleshooting
 
-Configuration is stored in `~/.pii_scanner_config.json`
+| Issue | Solution |
+|-------|----------|
+| "Python not found" | Install Python 3.11+ (see [INSTALL.md](INSTALL.md)) |
+| "Permission denied" | Run: `chmod +x scan view status setup.sh` |
+| "Module not found" | Run: `./setup.sh` |
+| "Virtual environment error" | Run: `python3 -m venv venv` |
 
-## 🔧 Technical Details
+## 📚 Documentation
 
-### Architecture
-- **`pii/`**: Core PII detection engine with Presidio integration
-- **`ingest/`**: File streaming and text extraction
-- **`app/`**: Application layer with CLI tools and utilities
+- [INSTALL.md](INSTALL.md) - Detailed installation guide
+- [QUICK_START.md](QUICK_START.md) - Usage guide
 
-### Memory Management
-- Streaming file processing prevents memory crashes
-- Configurable chunk sizes (default: 2000 chars)
-- Automatic cleanup of processed data
+## 📄 License
 
-### Performance
-- Deduplication prevents re-scanning unchanged files
-- Efficient regex patterns with overlapping result filtering
-- Background processing for continuous monitoring
-
-## 📊 Results Interpretation
-
-### Severity Levels
-- **CRITICAL**: SSN, credit cards, bank routing, driver licenses
-- **MEDIUM**: Phone numbers, addresses, EIN, ZIP codes
-- **LOW**: Email addresses, social handles
-- **NONE**: No PII detected
-
-### Classification
-- **Controlled**: US-based entities (SSN, US addresses, etc.)
-- **NonControlled**: Foreign/global entities (international phones, foreign addresses, etc.)
-
-## 🎯 Use Cases
-
-- **Compliance Audits**: Identify PII in document repositories
-- **Data Migration**: Scan files before moving to new systems
-- **Security Reviews**: Continuous monitoring of file shares
-- **Research**: Analyze PII patterns in large document collections
-
-## 🔒 Privacy & Security
-
-- **No Network Access**: All processing is local
-- **No Data Storage**: Results are temporary and user-controlled
-- **No OCR**: Text extraction only from searchable content
-- **Configurable**: Users control what gets scanned and where results are saved
-
-## 📝 License
-
-This tool is provided as-is for educational and development purposes. 
+MIT License - See LICENSE file for details.

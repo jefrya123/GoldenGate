@@ -15,19 +15,19 @@ def demo_smart_classification():
     print("=" * 60)
     
     test_cases = [
-        # Phone Numbers - International vs US
+        # Phone Numbers - International vs Controlled
         ("+44 20 7946 0958", "PHONE_NUMBER", "UK phone → NonControlled"),
         ("+81 3-1234-5678", "PHONE_NUMBER", "Japan phone → NonControlled"), 
-        ("(555) 123-4567", "PHONE_NUMBER", "US phone → Controlled"),
+        ("(555) 123-4567", "PHONE_NUMBER", "Controlled phone → Controlled"),
         
-        # Emails - Country domains vs US
+        # Emails - Country domains vs Controlled
         ("contact@company.fi", "EMAIL_ADDRESS", "Finland domain → NonControlled"),
-        ("admin@agency.gov", "EMAIL_ADDRESS", "US government → Controlled"),
-        ("john@company.com", "EMAIL_ADDRESS", "US commercial → Controlled"),
+        ("admin@agency.gov", "EMAIL_ADDRESS", "Controlled government → Controlled"),
+        ("john@company.com", "EMAIL_ADDRESS", "Controlled commercial → Controlled"),
         
-        # Addresses - International vs US
+        # Addresses - International vs Controlled
         ("10 Downing Street, London SW1A 2AA, UK", "ADDRESS", "UK address → NonControlled"),
-        ("123 Main Street, Anytown, CA 90210", "ADDRESS", "US address → Controlled"),
+        ("123 Main Street, Anytown, CA 90210", "ADDRESS", "Controlled address → Controlled"),
     ]
     
     print("Testing intelligent pattern recognition:\n")
@@ -43,7 +43,7 @@ def demo_smart_classification():
     print("• No hardcoded country lists - uses intelligent pattern recognition")
     print("• International phone codes (+XX) automatically detected as NonControlled")
     print("• Country-specific domains (.fi, .se, etc.) classified as NonControlled") 
-    print("• US government domains (.gov, .edu) classified as Controlled")
+    print("• Controlled government domains (.gov, .edu) classified as Controlled")
     print("• Smart address analysis using country names and postal patterns")
 
 def demo_file_scanning():
@@ -56,11 +56,11 @@ def demo_file_scanning():
     demo_content = """
 Demo Document with Mixed PII
 
-US Employee:
+Controlled Employee:
 Name: John Smith  
 Phone: (555) 123-4567
 Email: john.smith@company.com
-SSN: 123-45-6789
+ID: 123-45-6789
 
 International Contact:
 Name: Jane Wilson
@@ -81,7 +81,7 @@ Address: 10 Downing Street, London SW1A 2AA, UK
     print(f"python pii_launcher.py {Path(demo_file).parent} ./demo_results")
     
     print("\n📊 Expected results:")
-    print("• US employee data → Controlled classification")
+    print("• Controlled employee data → Controlled classification")
     print("• UK contact data → NonControlled classification") 
     print("• Mixed totals showing intelligent geographic detection")
     

@@ -16,9 +16,9 @@ def print_banner():
     print("║" + " " * 68 + "║")
     print("║    🔍 EASY PII SCANNER - Find Personal Info in Your Files    ║")
     print("║" + " " * 68 + "║")
-    print("║    ✅ Finds SSN, Credit Cards, Phone Numbers, Emails         ║")
+    print("║    ✅ Finds ID, Credit Cards, Phone Numbers, Emails          ║")
     print("║    ✅ Works on ANY file type (CSV, PDF, TXT, logs, etc.)     ║")
-    print("║    ✅ Tells you if data is US-based or International         ║")
+    print("║    ✅ Tells you if data is Controlled or NonControlled       ║")
     print("║    ✅ Super fast and secure (nothing leaves your computer)   ║")
     print("║" + " " * 68 + "║")
     print("╚" + "═" * 68 + "╝")
@@ -28,17 +28,40 @@ def check_environment():
     print("\n🔧 Checking environment...")
     
     # Check if virtual environment exists
-    venv_path = Path("pii_scanner_env")
+    venv_path = Path("venv")
     if not venv_path.exists():
         print("❌ Virtual environment not found!")
-        print("💡 Run this first: python setup.py")
+        print("💡 Run this first: ./setup.sh")
         return False
     
     print("✅ Environment looks good!")
     return True
 
+def get_scan_mode():
+    """Ask user whether to scan once or monitor continuously."""
+    print("\n" + "=" * 70)
+    print("🔍 CHOOSE SCAN MODE")
+    print("=" * 70)
+    print("\n1. 📄 One-time scan (wait for completion)")
+    print("2. 🚀 Background scan (run in background, view results anytime)")
+    print("3. 🔄 Monitor folder (continuously watch for new files)")
+    
+    while True:
+        choice = input("\n👉 Enter choice (1-3): ").strip()
+        if choice == "1":
+            return "scan"
+        elif choice == "2":
+            return "background"
+        elif choice == "3":
+            return "monitor"
+        else:
+            print("❌ Please enter 1, 2, or 3")
+
 def get_user_input():
     """Get user input in a friendly way."""
+    # First get scan mode
+    mode = get_scan_mode()
+    
     print("\n" + "=" * 70)
     print("📁 WHAT DO YOU WANT TO SCAN?")
     print("=" * 70)
@@ -118,7 +141,7 @@ def get_user_input():
         output_path.mkdir(parents=True, exist_ok=True)
         print(f"✅ Using default location: {output_path}")
     
-    return str(path), str(output_path)
+    return mode, str(path), str(output_path)
 
 def explain_process():
     """Explain what will happen."""
@@ -128,20 +151,111 @@ def explain_process():
     print()
     print("1. 🔍 Scanner will examine your files for personal information")
     print("2. 📊 It will find things like:")
-    print("   • Social Security Numbers (SSN)")
+    print("   • ID Numbers")
     print("   • Credit Card Numbers") 
     print("   • Phone Numbers")
     print("   • Email Addresses")
     print("   • Physical Addresses")
     print("3. 🏷️  Each item will be labeled as:")
-    print("   • 'Controlled' = US-based information")
-    print("   • 'NonControlled' = International/foreign information")
+    print("   • 'Controlled' = Domestic information")
+    print("   • 'NonControlled' = International information")
     print("4. 📄 Results will be saved in easy-to-read files")
     print("5. 🔒 Everything stays on YOUR computer - nothing is uploaded!")
     print()
     
     proceed = input("🚀 Ready to start scanning? (Y/n): ").strip().lower()
     return proceed != 'n'
+
+def run_monitor(scan_path, output_path):
+    """Run continuous monitoring."""
+    print("\n" + "=" * 70)
+    print("🔄 MONITORING MODE ACTIVE")
+    print("=" * 70)
+    print()
+    print(f"📁 Monitoring: {scan_path}")
+    print(f"💾 Results saved to: {output_path}")
+    print("⏱️  Checking every 30 seconds for new/changed files")
+    print("\n⚠️  Press Ctrl+C to stop monitoring\n")
+    
+    # Run monitor command
+    cmd = [
+        "venv/bin/python", "-m", "app.scanner_cli", "watch", 
+        scan_path, "--out", output_path, "--poll-seconds", "30"
+    ]
+    
+    try:
+        process = subprocess.Popen(
+            cmd, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            bufsize=1
+        )
+        
+        while True:
+            output = process.stderr.readline()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                line = output.strip()
+                if "Scanning" in line or "Found" in line or "entities" in line.lower():
+                    print(f"🔍 {line}")
+                elif "Watching" in line or "Checking" in line:
+                    print(f"👀 {line}")
+                    
+    except KeyboardInterrupt:
+        process.terminate()
+        print("\n\n⏹️  Monitoring stopped")
+        return True, "Monitoring stopped by user"
+    
+    return True, "Monitoring completed"
+
+def run_background_scan(scan_path, output_path):
+    """Run scan in background and return immediately."""
+    print("\n" + "=" * 70)
+    print("🚀 STARTING BACKGROUND SCAN")
+    print("=" * 70)
+    print()
+    print(f"📁 Scanning: {scan_path}")
+    print(f"💾 Results: {output_path}")
+    print()
+    
+    # Create a PID file to track the scan
+    pid_file = Path(output_path) / ".scan_pid"
+    
+    # Run scan in background
+    cmd = [
+        "venv/bin/python", "pii_launcher.py", scan_path, output_path
+    ]
+    
+    try:
+        # Start process in background
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True
+        )
+        
+        # Save PID for status checking
+        with open(pid_file, 'w') as f:
+            f.write(str(process.pid))
+        
+        print("✅ Scan started in background!")
+        print(f"🔢 Process ID: {process.pid}")
+        print()
+        print("📚 USEFUL COMMANDS:")
+        print(f"   👀 View results anytime:  ./view")
+        print(f"   📊 Check scan status:      ps -p {process.pid}")
+        print(f"   🔄 Watch results update:   watch -n 2 'venv/bin/python -m app.status_cli --out {output_path}'")
+        print()
+        print("💡 TIP: Results are updated in real-time as files are scanned!")
+        
+        return True, f"Background scan started (PID: {process.pid})"
+        
+    except Exception as e:
+        print(f"❌ Failed to start background scan: {e}")
+        return False, None
 
 def run_scan(scan_path, output_path):
     """Run the actual scan with progress updates."""
@@ -153,10 +267,9 @@ def run_scan(scan_path, output_path):
     print("📊 Progress will be shown below:")
     print()
     
-    # Activate virtual environment and run scan
+    # Run scan using venv Python directly
     cmd = [
-        "bash", "-c", 
-        f"source pii_scanner_env/bin/activate && python pii_launcher.py '{scan_path}' '{output_path}'"
+        "venv/bin/python", "pii_launcher.py", scan_path, output_path
     ]
     
     try:
@@ -217,8 +330,8 @@ def run_scan(scan_path, output_path):
             if total_entities > 0:
                 print(f"\n📊 SCAN SUMMARY:")
                 print(f"   🔍 Total PII found: {total_entities}")
-                print(f"   🇺🇸 US-based (Controlled): {controlled}")
-                print(f"   🌍 International (NonControlled): {noncontrolled}")
+                print(f"   🔵 Controlled: {controlled}")
+                print(f"   🟣 NonControlled: {noncontrolled}")
             else:
                 print(f"\n📊 SCAN SUMMARY:")
                 print(f"   ✅ No personal information detected in your files")
@@ -250,39 +363,79 @@ def show_results(output_path, success):
     
     if success and output_dir.exists():
         print(f"\n📂 Results saved to: {output_dir}")
-        print(f"\n📄 Files created:")
         
-        # List result files
+        # Show top findings from summary.csv
         summary_file = output_dir / "summary.csv"
         if summary_file.exists():
-            print(f"   ✅ summary.csv - Main results spreadsheet")
+            # Show top files with most PII
+            import csv
+            print(f"\n🔥 TOP FILES WITH PII:")
+            print("-" * 50)
             
-        entity_files = list(output_dir.glob("entities-*.jsonl"))
-        if entity_files:
-            print(f"   ✅ {len(entity_files)} detailed entity files")
+            try:
+                with open(summary_file, 'r') as f:
+                    reader = csv.DictReader(f)
+                    rows = list(reader)
+                    # Sort by total PII count
+                    rows_with_pii = [r for r in rows if int(r.get('total', 0)) > 0]
+                    rows_with_pii.sort(key=lambda x: int(x.get('total', 0)), reverse=True)
+                    
+                    if rows_with_pii:
+                        for i, row in enumerate(rows_with_pii[:5], 1):  # Show top 5
+                            filename = Path(row['file']).name
+                            total = row.get('total', 0)
+                            controlled = row.get('controlled', 0)
+                            noncontrolled = row.get('noncontrolled', 0)
+                            types = row.get('top_types', '{}')
+                            
+                            # Color code severity
+                            if int(total) > 10:
+                                severity = "🔴 CRITICAL"
+                            elif int(total) > 5:
+                                severity = "🟡 MEDIUM"
+                            else:
+                                severity = "🟢 LOW"
+                            
+                            print(f"{i}. {filename} - {severity}")
+                            print(f"   Found: {total} PII items ({controlled} Controlled, {noncontrolled} NonControlled)")
+                            if types != '{}':
+                                print(f"   Types: {types}")
+                    else:
+                        print("   ✅ No PII detected in any files!")
+            except Exception as e:
+                print(f"   Could not read summary: {e}")
         
-        print(f"\n💡 WHAT TO DO NEXT:")
-        print(f"   1. Open 'summary.csv' in Excel/Google Sheets to see overview")
-        print(f"   2. Review files with PII detected")
-        print(f"   3. Take action on sensitive data as needed")
-        
-        print(f"\n🔍 TO VIEW RESULTS RIGHT NOW:")
-        print(f"   Run: python -m app.status_cli --out '{output_path}'")
+        print(f"\n📚 QUICK COMMANDS:")
+        print(f"   📊 View summary:     venv/bin/python -m app.status_cli --out '{output_path}'")
+        print(f"   🔍 See actual PII:   venv/bin/python -m app.results_explorer --out '{output_path}'")
         
         # Ask if they want to view now
-        view_now = input(f"\n👀 View results summary now? (Y/n): ").strip().lower()
-        if view_now != 'n':
-            print(f"\n📊 RESULTS SUMMARY:")
+        print(f"\n🎯 OPTIONS:")
+        print("1. View quick summary (counts only)")
+        print("2. See actual PII found (detailed)")
+        print("3. Skip")
+        
+        choice = input(f"\n👉 Choose (1-3): ").strip()
+        
+        if choice == "1":
+            print(f"\n📊 QUICK SUMMARY:")
             print("-" * 50)
             try:
-                cmd = [
-                    "bash", "-c",
-                    f"source pii_scanner_env/bin/activate && python -m app.status_cli --out '{output_path}'"
-                ]
+                cmd = ["venv/bin/python", "-m", "app.status_cli", "--out", output_path]
                 subprocess.run(cmd, check=True)
             except:
                 print("❌ Could not display results summary")
-                print(f"💡 Manually run: python -m app.status_cli --out '{output_path}'")
+                print(f"💡 Run: venv/bin/python -m app.status_cli --out '{output_path}'")
+                
+        elif choice == "2":
+            print(f"\n🔍 DETAILED PII VIEWER:")
+            print("-" * 50)
+            try:
+                cmd = ["venv/bin/python", "-m", "app.results_explorer", "--out", output_path]
+                subprocess.run(cmd, check=False)
+            except:
+                print("❌ Could not launch results explorer")
+                print(f"💡 Run: venv/bin/python -m app.results_explorer --out '{output_path}'")
     else:
         print(f"\n❌ No results to show. Check error messages above.")
         print(f"\n💡 TROUBLESHOOTING:")
@@ -300,17 +453,25 @@ def main():
             return
         
         # Get user input
-        scan_path, output_path = get_user_input()
+        mode, scan_path, output_path = get_user_input()
         
         # Explain what will happen
         if not explain_process():
             print("\n👋 No problem! Come back anytime.")
             return
         
-        # Run the scan
-        success, output = run_scan(scan_path, output_path)
+        # Run scan or monitor based on mode
+        if mode == "monitor":
+            success, output = run_monitor(scan_path, output_path)
+        elif mode == "background":
+            success, output = run_background_scan(scan_path, output_path)
+            # Don't show full results for background mode
+            if success:
+                return
+        else:
+            success, output = run_scan(scan_path, output_path)
         
-        # Show results
+        # Show results (only for non-background modes)
         show_results(output_path, success)
         
         print(f"\n" + "=" * 70)

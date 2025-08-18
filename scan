@@ -1,0 +1,11 @@
+#!/bin/bash
+# Simple launcher that handles everything
+
+# Check if venv exists, if not run setup
+if [ ! -d "venv" ]; then
+    echo "🔧 First time setup..."
+    ./setup.sh
+else
+    # Just run with venv Python
+    venv/bin/python easy_launcher.py
+fi
