@@ -17,21 +17,28 @@ def print_banner():
     print("=" * 50)
 
 
-def validate_directory(path_str, description="Directory"):
-    """Validate directory path."""
+def validate_path(path_str, description="Path"):
+    """Validate file or directory path."""
     if not path_str:
-        return None, f"❌ No {description.lower()} specified"
+        return None, f"❌ No {description.lower()} specified", False
     
     path = Path(path_str).expanduser().resolve()
     if not path.exists():
-        return None, f"❌ {description} does not exist: {path}"
-    
-    if not path.is_dir():
-        return None, f"❌ Path is not a directory: {path}"
+        return None, f"❌ {description} does not exist: {path}", False
     
     if not os.access(path, os.R_OK):
-        return None, f"❌ No read permission for: {path}"
+        return None, f"❌ No read permission for: {path}", False
     
+    is_file = path.is_file()
+    return path, None, is_file
+
+def validate_directory(path_str, description="Directory"):
+    """Validate directory path."""
+    path, error, is_file = validate_path(path_str, description)
+    if error:
+        return None, error
+    if is_file:
+        return None, f"❌ Path is not a directory: {path}"
     return path, None
 
 def print_menu():
@@ -511,9 +518,9 @@ def show_help():
     print("  python -m app.live_cli --help")
 
 
-def quick_scan(scan_dir, out_dir=None, exts=None):
+def quick_scan(scan_path_str, out_dir=None, exts=None):
     """Quick scan function for CLI usage."""
-    scan_path, error = validate_directory(scan_dir, "Scan directory")
+    scan_path, error, is_file = validate_path(scan_path_str, "Scan path")
     if error:
         print(error)
         return False
@@ -533,13 +540,42 @@ def quick_scan(scan_dir, out_dir=None, exts=None):
         print(f"❌ Cannot create output directory: {e}")
         return False
     
-    # Run scan
-    cmd = [
-        sys.executable, "-m", "app.scanner_cli",
-        "scan", str(scan_path),
-        "--out", str(out_path),
-        "--exts", exts
-    ]
+    # Run scan based on path type
+    if is_file:
+        # For single file, use enhanced scanner directly
+        try:
+            from app.scanner_enhanced import EnhancedScanner
+            extensions_set = set('.' + ext.strip().lstrip('.') for ext in exts.split(','))
+            scanner = EnhancedScanner(out_path, extensions=extensions_set)
+            
+            # Check if file extension is in allowed list
+            if scan_path.suffix.lower() not in extensions_set:
+                print(f"⚠️  File type {scan_path.suffix} not in scan list, scanning anyway...")
+            
+            print(f"📊 Processing: {scan_path.name}...")
+            summary = scanner.scan_file_with_stats(scan_path)
+            
+            if summary:
+                print(f"📊 Processed: {scan_path.name} - {summary.total} entities ({summary.controlled} controlled, {summary.noncontrolled} noncontrolled)")
+            else:
+                print(f"📊 Processed: {scan_path.name} - 0 entities found")
+            
+            config.add_recent_output_dir(str(out_path))
+            return True
+            
+        except Exception as e:
+            print(f"❌ File scan failed: {e}")
+            import traceback
+            traceback.print_exc()
+            return False
+    else:
+        # For directory, use standard scanner
+        cmd = [
+            sys.executable, "-m", "app.scanner_cli",
+            "scan", str(scan_path),
+            "--out", str(out_path),
+            "--exts", exts
+        ]
     
     try:
         print(f"🚀 Scanning {scan_path}...")
@@ -578,11 +614,11 @@ def main():
             return
         
         # Quick scan mode
-        scan_dir = sys.argv[1]
+        scan_path = sys.argv[1]
         out_dir = sys.argv[2] if len(sys.argv) > 2 else None
         
         print_banner()
-        if quick_scan(scan_dir, out_dir):
+        if quick_scan(scan_path, out_dir):
             print("\n🎉 Quick scan completed successfully!")
         else:
             print("\n❌ Quick scan failed!")

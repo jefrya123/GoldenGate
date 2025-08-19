@@ -1,0 +1,11 @@
+Employee_ID,Name,Email,Phone,SSN,Address,Salary,Department,Start_Date
+E001,John Smith,john.smith@company.com,(555) 123-4567,123-45-6789,"123 Main St, New York, NY 10001",85000,Engineering,2020-03-15
+E002,Sarah Johnson,sjohnson@company.com,555-234-5678,234-56-7890,"456 Oak Ave, Los Angeles, CA 90001",92000,Marketing,2019-07-22
+E003,Michael Chen,m.chen@company.com,+1-555-345-6789,345-67-8901,"789 Pine Rd, Chicago, IL 60601",78000,Sales,2021-01-10
+E004,Emma Wilson,emma.w@company.com,(555) 456-7890,456-78-9012,"321 Elm St, Houston, TX 77001",105000,Engineering,2018-11-05
+E005,James Brown,jbrown@company.com,555.567.8901,567-89-0123,"654 Maple Dr, Phoenix, AZ 85001",88000,HR,2020-06-18
+E006,Maria Garcia,mgarcia@company.com,+1 (555) 678-9012,678-90-1234,"987 Cedar Ln, Philadelphia, PA 19101",95000,Finance,2019-02-28
+E007,David Lee,dlee@company.com,555-789-0123,789-01-2345,"147 Birch Way, San Antonio, TX 78201",82000,IT,2021-09-14
+E008,Lisa Anderson,l.anderson@company.com,(555) 890-1234,890-12-3456,"258 Spruce Ct, San Diego, CA 92101",91000,Marketing,2020-12-01
+E009,Robert Taylor,rtaylor@company.com,555.901.2345,901-23-4567,"369 Willow Pl, Dallas, TX 75201",87000,Sales,2019-08-17
+E010,Jennifer White,jwhite@company.com,+1-555-012-3456,012-34-5678,"741 Ash Blvd, San Jose, CA 95101",110000,Engineering,2018-04-03

@@ -1,0 +1,98 @@
+{
+  "bank": "National Bank",
+  "branch": "Downtown Branch",
+  "export_date": "2024-03-15",
+  "transactions": [
+    {
+      "id": "TXN-001",
+      "date": "2024-03-10",
+      "account_holder": {
+        "name": "Thomas Anderson",
+        "ssn": "987-65-4321",
+        "phone": "(555) 101-2020",
+        "email": "t.anderson@matrix.com",
+        "address": "101 Neo Ave, San Francisco, CA 94110"
+      },
+      "account_number": "ACC-1234567890",
+      "routing_number": "021000021",
+      "type": "deposit",
+      "amount": 5000.00
+    },
+    {
+      "id": "TXN-002",
+      "date": "2024-03-11",
+      "account_holder": {
+        "name": "Trinity Smith",
+        "ssn": "876-54-3210",
+        "phone": "555-202-3030",
+        "email": "trinity@email.com",
+        "driver_license": "CA-T987654321"
+      },
+      "account_number": "ACC-0987654321",
+      "routing_number": "021000021",
+      "type": "withdrawal",
+      "amount": 1500.00,
+      "atm_location": "123 Market St, CA 94102"
+    },
+    {
+      "id": "TXN-003",
+      "date": "2024-03-12",
+      "account_holder": {
+        "name": "Morpheus Johnson",
+        "ein": "95-1234567",
+        "business_name": "Red Pill LLC",
+        "phone": "+1-555-303-4040",
+        "email": "morpheus@redpill.biz",
+        "address": "P.O. Box 999, Oakland, CA 94612"
+      },
+      "account_number": "BUS-5555666677",
+      "routing_number": "026009593",
+      "type": "wire_transfer",
+      "amount": 25000.00,
+      "swift_code": "BOFAUS3N"
+    },
+    {
+      "id": "TXN-004",
+      "date": "2024-03-13",
+      "account_holder": {
+        "name": "Agent Smith",
+        "ssn": "765-43-2109",
+        "phone": "555.404.5050",
+        "credit_card": "5500-0000-0000-0004",
+        "cvv": "123"
+      },
+      "type": "credit_purchase",
+      "merchant": "Amazon.com",
+      "amount": 299.99
+    },
+    {
+      "id": "TXN-005",
+      "date": "2024-03-14",
+      "account_holder": {
+        "name": "Oracle Jones",
+        "ssn": "654-32-1098",
+        "phone": "(555) 505-6060",
+        "email": "oracle@cookies.net",
+        "passport": "USA-987654321"
+      },
+      "account_number": "ACC-3333444455",
+      "type": "international_transfer",
+      "amount": 10000.00,
+      "iban": "GB82 WEST 1234 5698 7654 32",
+      "destination_country": "United Kingdom"
+    }
+  ],
+  "summary": {
+    "total_transactions": 5,
+    "total_amount": 41799.99,
+    "sensitive_data_count": {
+      "ssn": 5,
+      "phone": 5,
+      "email": 4,
+      "credit_card": 1,
+      "passport": 1,
+      "driver_license": 1,
+      "ein": 1
+    }
+  }
+}

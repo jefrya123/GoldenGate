@@ -1,0 +1,113 @@
+===== CUSTOMER DATABASE EXPORT - CONFIDENTIAL =====
+Generated: 2024-03-15 14:30:00
+Total Records: 10
+
+-------------------
+Customer #001
+Name: Alice Johnson
+Email: alice.j@email.com
+Phone: (555) 111-2222
+Credit Card: 4532-1234-5678-9012
+Billing Address: 100 Market St, Suite 500, San Francisco, CA 94105
+Account Since: 2019-05-20
+Last Purchase: 2024-03-10
+
+-------------------
+Customer #002
+Name: Bob Martinez
+Email: bob.martinez@gmail.com
+Phone: 555-222-3333
+Credit Card: 5412-7512-3412-3456
+Billing Address: 200 Broadway Ave, New York, NY 10013
+Account Since: 2020-08-15
+Last Purchase: 2024-03-08
+
+-------------------
+Customer #003
+Name: Carol Williams
+Email: cwilliams@yahoo.com
+Phone: +1 (555) 333-4444
+Credit Card: 4916-9876-5432-1098
+Billing Address: 300 Michigan Ave, Chicago, IL 60604
+Driver License: IL-D123-4567-8901
+Account Since: 2021-01-10
+Last Purchase: 2024-03-12
+
+-------------------
+Customer #004
+Name: Daniel Kim
+Email: dkim@hotmail.com
+Phone: 555.444.5555
+Credit Card: 3782-822463-10005
+Billing Address: 400 Sunset Blvd, Los Angeles, CA 90028
+SSN: 321-65-4987 (for credit check)
+Account Since: 2018-11-22
+Last Purchase: 2024-03-05
+
+-------------------
+Customer #005
+Name: Emily Brown
+Email: emily.brown@protonmail.com
+Phone: (555) 555-6666
+Credit Card: 6011-1234-5678-9012
+Billing Address: 500 First St, Seattle, WA 98101
+Account Since: 2022-03-18
+Last Purchase: 2024-03-14
+
+-------------------
+Customer #006
+Name: Frank Davis
+Email: fdavis@outlook.com
+Phone: 555-666-7777
+Credit Card: 5555-5555-5555-4444
+Billing Address: P.O. Box 1234, Portland, OR 97201
+EIN: 52-1234567 (Business Account)
+Account Since: 2019-07-30
+Last Purchase: 2024-03-09
+
+-------------------
+Customer #007
+Name: Grace Chen
+Email: grace.c@icloud.com
+Phone: +1-555-777-8888
+Credit Card: 4111-1111-1111-1111
+Billing Address: 600 Pine St, Boston, MA 02108
+Social Media: @gracechen_official
+Account Since: 2021-06-15
+Last Purchase: 2024-03-11
+
+-------------------
+Customer #008
+Name: Henry Wilson
+Email: hwilson@company.org
+Phone: 555.888.9999
+Credit Card: 5105-1051-0510-5100
+Billing Address: 700 Lake Shore Dr, Miami, FL 33139
+Passport: US-123456789
+Account Since: 2020-02-28
+Last Purchase: 2024-03-13
+
+-------------------
+Customer #009
+Name: Isabella Lopez
+Email: i.lopez@university.edu
+Phone: (555) 999-0000
+Credit Card: 4012-8888-8888-1881
+Billing Address: 800 College Ave, Austin, TX 78701
+Student ID: STU-2024-98765
+Account Since: 2023-09-01
+Last Purchase: 2024-03-07
+
+-------------------
+Customer #010
+Name: Jack Thompson
+Email: jthompson@business.com
+Phone: 555-000-1111
+Credit Card: 3714-496353-98431
+Billing Address: 900 Wall St, New York, NY 10005
+LinkedIn: linkedin.com/in/jackthompson
+Twitter: @jack_thompson_nyc
+Account Since: 2018-05-12
+Last Purchase: 2024-03-15
+
+===== END OF DATABASE EXPORT =====

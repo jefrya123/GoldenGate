@@ -1,8 +1,8 @@
 #!/bin/bash
 # Quick viewer for PII scan results
 
-# Default to pii_scan_results directory
-OUTPUT_DIR="${1:-pii_scan_results}"
+# Default to pii_results directory (matches actual output)
+OUTPUT_DIR="${1:-pii_results}"
 
 if [ ! -d "$OUTPUT_DIR" ]; then
     echo "❌ No results found in: $OUTPUT_DIR"
