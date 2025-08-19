@@ -5,29 +5,29 @@ This folder contains realistic test files to demonstrate the scanner's capabilit
 ## Files Overview
 
 ### 1. `employee_records.csv` (10 records)
-**Purpose:** Typical HR database export  
-**Contains:** SSNs, phones, emails, addresses  
-**Expected:** ~60 PII items (10 SSNs, 10 phones, 10 emails, 10 addresses, etc.)
+**Purpose:** HR database export  
+**Contains:** Personal identifiers, phones, emails, addresses  
+**Expected:** ~60 PII items
 
 ### 2. `customer_database.txt` (10 customers)
-**Purpose:** CRM system export in text format  
-**Contains:** Credit cards, SSNs, phones, emails, addresses, social media  
-**Expected:** ~80 PII items (mixed types including credit cards)
+**Purpose:** CRM system export  
+**Contains:** Credit cards, personal IDs, phones, emails, addresses  
+**Expected:** ~80 PII items
 
 ### 3. `medical_records.log` (System logs)
-**Purpose:** Healthcare system audit logs  
-**Contains:** Patient SSNs, Medicare IDs, phone numbers, addresses  
-**Expected:** ~50 PII items (HIPAA-relevant data)
+**Purpose:** Healthcare system logs  
+**Contains:** Patient identifiers, phone numbers, addresses  
+**Expected:** ~50 PII items
 
 ### 4. `financial_transactions.json` (5 transactions)
-**Purpose:** Banking system JSON export  
-**Contains:** SSNs, EINs, credit cards, bank accounts, passport numbers  
-**Expected:** ~40 PII items (financial identifiers)
+**Purpose:** Banking system export  
+**Contains:** Personal IDs, credit cards, bank accounts  
+**Expected:** ~40 PII items
 
 ### 5. `breach_notification.html` (Incident report)
-**Purpose:** Data breach notification document  
-**Contains:** Mixed international and US PII, GDPR-relevant data  
-**Expected:** ~100+ PII items (comprehensive mix)
+**Purpose:** Security incident document  
+**Contains:** Mixed PII types  
+**Expected:** ~100+ PII items
 
 ### 6. Original Test Files
 - `sample_data.txt` - Simple test file (5 PII items)
@@ -64,28 +64,22 @@ Tests performance with 10,000 customer records.
 ## Expected Results
 
 Running `./scan demo_files/` should detect approximately:
-- **SSNs:** 30+
+- **Personal IDs:** 30+
 - **Credit Cards:** 20+
 - **Phone Numbers:** 40+
 - **Email Addresses:** 35+
 - **Physical Addresses:** 30+
 - **Driver Licenses:** 3+
 - **Passport Numbers:** 3+
-- **EINs:** 3+
+- **Tax IDs:** 3+
 - **Social Media Handles:** 5+
-
-## Classification Examples
-
-The scanner will classify data as:
-- **Controlled:** US-based PII (SSNs, US addresses, etc.)
-- **NonControlled:** International data (foreign phones, addresses)
 
 ## Why These Files?
 
 1. **Realistic Formats:** Real-world file types (CSV, JSON, HTML, logs)
-2. **Compliance Testing:** HIPAA, GDPR, PCI-DSS relevant data
+2. **Compliance Testing:** Healthcare, financial, and business data
 3. **Performance Demo:** Variety of file sizes and formats
-4. **Edge Cases:** Mixed formats, international data, business data
+4. **Edge Cases:** Mixed formats and data types
 
 ## Usage for Demonstration
 

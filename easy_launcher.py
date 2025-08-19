@@ -16,9 +16,9 @@ def print_banner():
     print("║" + " " * 68 + "║")
     print("║    🔍 EASY PII SCANNER - Find Personal Info in Your Files    ║")
     print("║" + " " * 68 + "║")
-    print("║    ✅ Finds ID, Credit Cards, Phone Numbers, Emails          ║")
+    print("║    ✅ Finds personal IDs, Credit Cards, Phones, Emails       ║")
     print("║    ✅ Works on ANY file type (CSV, PDF, TXT, logs, etc.)     ║")
-    print("║    ✅ Tells you if data is Controlled or NonControlled       ║")
+    print("║    ✅ Categorizes and classifies sensitive data              ║")
     print("║    ✅ Super fast and secure (nothing leaves your computer)   ║")
     print("║" + " " * 68 + "║")
     print("╚" + "═" * 68 + "╝")
@@ -171,11 +171,8 @@ def explain_process():
     print("   • Phone Numbers")
     print("   • Email Addresses")
     print("   • Physical Addresses")
-    print("3. 🏷️  Each item will be labeled as:")
-    print("   • 'Controlled' = Domestic information")
-    print("   • 'NonControlled' = International information")
-    print("4. 📄 Results will be saved in easy-to-read files")
-    print("5. 🔒 Everything stays on YOUR computer - nothing is uploaded!")
+    print("3. 📄 Results will be saved in easy-to-read files")
+    print("4. 🔒 Everything stays on YOUR computer - nothing is uploaded!")
     print()
     
     proceed = input("🚀 Ready to start scanning? (Y/n): ").strip().lower()
@@ -418,7 +415,7 @@ def show_results(output_path, success):
                                 severity = "🟢 LOW"
                             
                             print(f"{i}. {filename} - {severity}")
-                            print(f"   Found: {total} PII items ({controlled} Controlled, {noncontrolled} NonControlled)")
+                            print(f"   Found: {total} PII items")
                             if types != '{}':
                                 print(f"   Types: {types}")
                     else:

@@ -30,7 +30,7 @@ curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o G
 
 ## What It Finds
 
-SSNs, Credit Cards, Phone Numbers, Emails, Addresses, Driver Licenses, Passport Numbers, EINs, Bank Accounts
+Personal identifiers, Credit Cards, Phone Numbers, Emails, Addresses, Driver Licenses, Passport Numbers, Tax IDs, Bank Accounts
 
 ## Requirements
 
