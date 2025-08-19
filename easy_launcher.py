@@ -56,11 +56,6 @@ def get_scan_mode():
     while True:
         choice = input("\n👉 Your choice (1 or 2): ").strip()
         if choice == "1":
-            # Ask if they want background for one-time scan
-            print("\n💡 TIP: Background mode lets you keep using this terminal")
-            bg = input("👉 Run in background? (y/N): ").strip().lower()
-            if bg in ['y', 'yes']:
-                return "background"
             return "scan"
         elif choice == "2":
             return "monitor"
@@ -481,11 +476,6 @@ def main():
         # Run scan or monitor based on mode
         if mode == "monitor":
             success, output = run_monitor(scan_path, output_path)
-        elif mode == "background":
-            success, output = run_background_scan(scan_path, output_path)
-            # Don't show full results for background mode
-            if success:
-                return
         else:
             success, output = run_scan(scan_path, output_path)
         

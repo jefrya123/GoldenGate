@@ -5,9 +5,15 @@
 OUTPUT_DIR="${1:-pii_results}"
 
 if [ ! -d "$OUTPUT_DIR" ]; then
-    echo "❌ No results found in: $OUTPUT_DIR"
-    echo "💡 Run ./scan first to generate results"
-    exit 1
+    echo "📊 No scan results found yet"
+    echo ""
+    echo "To get started:"
+    echo "1. Run: ./scan demo_files/"
+    echo "2. Then run: ./view"
+    echo ""
+    echo "Or try the interactive scanner:"
+    echo "   ./scan"
+    exit 0
 fi
 
 echo "🔍 PII SCAN RESULTS VIEWER"
