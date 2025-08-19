@@ -40,17 +40,25 @@ def check_environment():
 def get_scan_mode():
     """Ask user whether to scan once or monitor continuously."""
     print("\n" + "=" * 70)
-    print("🔍 CHOOSE SCAN MODE")
+    print("🔍 HOW DO YOU WANT TO SCAN?")
     print("=" * 70)
-    print("\n1. 📄 One-time scan (scans files once and exits)")
-    print("2. 🔄 Continuous monitoring (watches folder for new/changed files)")
+    
+    print("\n1️⃣  QUICK SCAN (One-time)")
+    print("   ✓ Scans all files once")
+    print("   ✓ Shows results when done")
+    print("   ✓ Perfect for: Checking a project before release")
+    
+    print("\n2️⃣  MONITOR FOLDER (Continuous)")
+    print("   ✓ Keeps watching for new/changed files")
+    print("   ✓ Updates results automatically")
+    print("   ✓ Perfect for: Watching downloads or upload folders")
     
     while True:
-        choice = input("\n👉 Enter choice (1-2): ").strip()
+        choice = input("\n👉 Your choice (1 or 2): ").strip()
         if choice == "1":
             # Ask if they want background for one-time scan
-            print("\n🚀 Run scan in background? (you can use terminal while scanning)")
-            bg = input("👉 Background mode? (y/N): ").strip().lower()
+            print("\n💡 TIP: Background mode lets you keep using this terminal")
+            bg = input("👉 Run in background? (y/N): ").strip().lower()
             if bg in ['y', 'yes']:
                 return "background"
             return "scan"
@@ -65,19 +73,24 @@ def get_user_input():
     mode = get_scan_mode()
     
     print("\n" + "=" * 70)
-    print("📁 WHAT DO YOU WANT TO SCAN?")
+    if mode == "monitor":
+        print("📁 WHICH FOLDER TO MONITOR?")
+    else:
+        print("📁 WHAT TO SCAN?")
     print("=" * 70)
     
     # Get what to scan
     while True:
-        print("\n📂 Enter the path to scan:")
-        print("   Examples:")
-        print("   • /home/user/Documents")
-        print("   • C:\\Users\\YourName\\Desktop")  
-        print("   • /path/to/large_file.csv")
-        print("   • ./my_folder")
+        if mode == "monitor":
+            print("\n📂 Enter folder path to monitor:")
+            print("   Examples: ~/Downloads, /var/log, ./uploads")
+        else:
+            print("\n📂 Enter path to scan:")
+            print("   Examples: ./demo_files, ~/Documents, /tmp")
         
-        scan_path = input("\n👉 Path to scan: ").strip()
+        print("   💡 Try: demo_files (to test with examples)")
+        
+        scan_path = input("\n👉 Path: ").strip()
         
         if not scan_path:
             print("❌ Please enter a path!")
@@ -220,12 +233,14 @@ def run_monitor(scan_path, output_path):
 def run_background_scan(scan_path, output_path):
     """Run scan in background and return immediately."""
     print("\n" + "=" * 70)
-    print("🚀 STARTING BACKGROUND SCAN")
+    print("🚀 BACKGROUND SCAN STARTED")
     print("=" * 70)
     print()
     print(f"📁 Scanning: {scan_path}")
-    print(f"💾 Results: {output_path}")
+    print(f"💾 Results will appear in: {output_path}")
     print()
+    print("ℹ️  Your scan is running in the background!")
+    print("   You can close this terminal or do other work")
     
     # Create a PID file to track the scan
     pid_file = Path(output_path) / ".scan_pid"
@@ -267,11 +282,11 @@ def run_background_scan(scan_path, output_path):
 def run_scan(scan_path, output_path):
     """Run the actual scan with progress updates."""
     print("\n" + "=" * 70)
-    print("🚀 SCANNING IN PROGRESS...")
+    print("🔍 SCANNING YOUR FILES...")
     print("=" * 70)
     print()
-    print("⏳ Please wait while we scan your files...")
-    print("📊 Progress will be shown below:")
+    print("⏳ This may take a moment depending on folder size")
+    print("📊 Files being processed:")
     print()
     
     # Run scan using venv Python directly
