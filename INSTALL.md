@@ -1,32 +1,32 @@
 # Installation Guide
 
-> **Note**: This project is hosted on GitLab. All installation methods below work with GitLab. Git is **NOT required** - you can download as ZIP.
+> **Note**: This project is hosted on GitHub. Git is **NOT required** - you can download as ZIP.
 
 ## 📥 Download Options
 
-### Option 1: GitLab (With Git)
+### Option 1: GitHub (With Git)
 ```bash
-# Clone from GitLab
-git clone https://gitlab.com/yourusername/GoldenGate.git
+# Clone from GitHub
+git clone https://github.com/jefrya123/GoldenGate.git
 cd GoldenGate
 ```
 
-### Option 2: GitLab (Without Git - Download ZIP)
+### Option 2: GitHub (Without Git - Download ZIP)
 ```bash
 # Download ZIP file
-wget https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip
+wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
 # OR
-curl -L https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip -o GoldenGate.zip
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
 
 # Extract
-unzip GoldenGate-main.zip
+unzip GoldenGate.zip
 cd GoldenGate-main
 ```
 
 ### Option 3: Direct Download (No Git Required)
 ```bash
 # Download and extract in one command
-curl -L https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.tar.gz | tar -xz
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.tar.gz | tar -xz
 cd GoldenGate-main
 ```
 
@@ -39,8 +39,8 @@ cd GoldenGate-main
 sudo apt update
 sudo apt install -y python3 python3-pip python3-venv git
 
-# Clone from GitLab
-git clone https://gitlab.com/yourusername/GoldenGate.git
+# Clone from GitHub
+git clone https://github.com/jefrya123/GoldenGate.git
 cd GoldenGate
 
 # Make scripts executable
@@ -57,9 +57,9 @@ chmod +x scan view status setup.sh
 sudo apt update
 sudo apt install -y python3 python3-pip python3-venv wget unzip
 
-# Download from GitLab
-wget https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip
-unzip GoldenGate-main.zip
+# Download from GitHub
+wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
+unzip GoldenGate.zip
 cd GoldenGate-main
 
 # Make scripts executable
@@ -84,8 +84,8 @@ chmod +x scan view status setup.sh
 # Install dependencies
 sudo dnf install -y python3 python3-pip python3-devel git
 
-# Clone from GitLab
-git clone https://gitlab.com/yourusername/GoldenGate.git
+# Clone from GitHub
+git clone https://github.com/jefrya123/GoldenGate.git
 cd GoldenGate
 
 # Setup
@@ -99,9 +99,9 @@ chmod +x scan view status setup.sh
 # Install Python and wget
 sudo dnf install -y python3 python3-pip python3-devel wget unzip
 
-# Download from GitLab
-wget https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip
-unzip GoldenGate-main.zip
+# Download from GitHub
+wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
+unzip GoldenGate.zip
 cd GoldenGate-main
 
 # Setup
@@ -129,9 +129,9 @@ wsl --install
 sudo apt update
 sudo apt install -y python3 python3-pip python3-venv wget unzip
 
-# Download from GitLab (no git needed)
-wget https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip
-unzip GoldenGate-main.zip
+# Download from GitHub (no git needed)
+wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
+unzip GoldenGate.zip
 cd GoldenGate-main
 
 # Make scripts executable
@@ -158,15 +158,15 @@ chmod +x scan view status setup.sh
 #### Step 3: Setup GoldenGate
 
 **Method A: Download as ZIP (No Git)**
-1. Go to: `https://gitlab.com/yourusername/GoldenGate`
-2. Click "Download" button → "Download ZIP"
+1. Go to: `https://github.com/jefrya123/GoldenGate`
+2. Click green "Code" button → "Download ZIP"
 3. Extract the ZIP file
 4. Open PowerShell in that folder
 
 **Method B: Using PowerShell**
 ```powershell
 # Download and extract
-Invoke-WebRequest -Uri "https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip" -OutFile "GoldenGate.zip"
+Invoke-WebRequest -Uri "https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip" -OutFile "GoldenGate.zip"
 Expand-Archive -Path "GoldenGate.zip" -DestinationPath "."
 cd GoldenGate-main
 
@@ -208,7 +208,7 @@ pip3 --version
 
 **Method 1: With Git**
 ```bash
-git clone https://gitlab.com/yourusername/GoldenGate.git
+git clone https://github.com/jefrya123/GoldenGate.git
 cd GoldenGate
 chmod +x scan view status setup.sh
 ./setup.sh
@@ -218,7 +218,7 @@ chmod +x scan view status setup.sh
 **Method 2: Without Git**
 ```bash
 # Download with curl
-curl -L https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.tar.gz | tar -xz
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.tar.gz | tar -xz
 cd GoldenGate-main
 chmod +x scan view status setup.sh
 ./setup.sh
@@ -231,7 +231,7 @@ chmod +x scan view status setup.sh
 
 ### Method 1: With Git
 ```bash
-git clone https://gitlab.com/yourusername/GoldenGate.git
+git clone https://github.com/jefrya123/GoldenGate.git
 cd GoldenGate
 docker build -t goldengate-scanner .
 docker run -v $(pwd)/scan_data:/scan_data goldengate-scanner /scan_data
@@ -240,8 +240,8 @@ docker run -v $(pwd)/scan_data:/scan_data goldengate-scanner /scan_data
 ### Method 2: Without Git
 ```bash
 # Download and extract
-wget https://gitlab.com/yourusername/GoldenGate/-/archive/main/GoldenGate-main.zip
-unzip GoldenGate-main.zip
+wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
+unzip GoldenGate.zip
 cd GoldenGate-main
 
 # Build and run
