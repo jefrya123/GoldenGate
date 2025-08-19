@@ -329,9 +329,8 @@ def run_scan(scan_path, output_path):
             
             if total_entities > 0:
                 print(f"\n📊 SCAN SUMMARY:")
-                print(f"   🔍 Total PII found: {total_entities}")
-                print(f"   🔵 Controlled: {controlled}")
-                print(f"   🟣 NonControlled: {noncontrolled}")
+                print(f"   🔍 Total PII items found: {total_entities}")
+                print(f"   📈 See details in: {output_path}")
             else:
                 print(f"\n📊 SCAN SUMMARY:")
                 print(f"   ✅ No personal information detected in your files")

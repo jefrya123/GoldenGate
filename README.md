@@ -1,6 +1,6 @@
 # GoldenGate PII Scanner
 
-Fast, accurate PII (Personally Identifiable Information) scanner that helps you find and protect sensitive data in your files.
+Fast, accurate PII (Personally Identifiable Information) scanner that helps you find and protect sensitive data in your files. Scans documents, CSVs, PDFs, and logs to identify personal information that needs protection.
 
 ## 🎯 Why Use GoldenGate?
 
@@ -62,15 +62,25 @@ Options:
 ./status  # Is scan running? How many files done?
 ```
 
-## 📊 What It Finds
+## 📊 What It Detects
 
-| Type | Examples | Risk Level |
-|------|----------|------------|
-| **Financial** | Credit cards, bank accounts, SSN | Critical |
-| **Personal** | Names, addresses, phone numbers | High |
-| **Digital** | Emails, IP addresses, URLs | Medium |
-| **Medical** | Patient IDs, medical terms | Critical |
-| **Custom** | Your own patterns (configurable) | Variable |
+**Financial Data**
+- Social Security Numbers (SSN)
+- Credit Card Numbers
+- Bank Account Numbers
+- Employer Identification Numbers (EIN)
+
+**Personal Information**
+- Phone Numbers
+- Email Addresses
+- Physical Addresses
+- Driver License Numbers
+- ZIP Codes
+
+**Digital Identifiers**
+- Social Media Handles
+- IP Addresses
+- URLs with personal data
 
 ## 💡 Common Use Cases
 
