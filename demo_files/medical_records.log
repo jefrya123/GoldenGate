@@ -1,0 +1,41 @@
+[2024-03-15 09:00:00] INFO: System startup - Medical Records Management System v2.5
+[2024-03-15 09:00:15] ACCESS: User DR_SMITH logged in from IP 192.168.1.100
+[2024-03-15 09:05:23] PATIENT: Loading record for Patient ID: P-2024-001234
+[2024-03-15 09:05:24] DATA: Name: Robert Johnson, DOB: 1975-06-15, SSN: 111-22-3333
+[2024-03-15 09:05:24] DATA: Phone: (555) 321-9876, Email: rjohnson@email.com
+[2024-03-15 09:05:24] DATA: Insurance ID: BCBS-123456789, Group: GRP-9876
+[2024-03-15 09:05:24] DATA: Address: 1234 Health Center Dr, Boston, MA 02134
+[2024-03-15 09:10:45] PATIENT: Loading record for Patient ID: P-2024-001235
+[2024-03-15 09:10:46] DATA: Name: Maria Rodriguez, DOB: 1982-09-23, SSN: 222-33-4444
+[2024-03-15 09:10:46] DATA: Phone: 555-432-8765, Email: mrodriguez@gmail.com
+[2024-03-15 09:10:46] DATA: Emergency Contact: Juan Rodriguez, Phone: (555) 432-8766
+[2024-03-15 09:10:46] DATA: Address: 5678 Medical Plaza, Suite 200, Los Angeles, CA 90045
+[2024-03-15 09:15:30] WARNING: Sensitive data accessed - Psychiatric records
+[2024-03-15 09:15:31] PATIENT: Loading record for Patient ID: P-2024-001236
+[2024-03-15 09:15:32] DATA: Name: Jennifer Smith, DOB: 1990-03-10, SSN: 333-44-5555
+[2024-03-15 09:15:32] DATA: Phone: +1-555-543-7654, Email: jsmith@yahoo.com
+[2024-03-15 09:15:32] DATA: Medicare ID: 1EG4-TE5-MK72
+[2024-03-15 09:15:32] DATA: Address: 9012 Wellness Way, Chicago, IL 60605
+[2024-03-15 09:20:15] PRESCRIPTION: New prescription for Patient SSN: 444-55-6666
+[2024-03-15 09:20:16] DATA: Medication: Lisinopril 10mg, Prescriber: Dr. Wilson, DEA: BW1234567
+[2024-03-15 09:20:16] DATA: Pharmacy: CVS #5432, Phone: (555) 654-3210
+[2024-03-15 09:25:00] BILLING: Processing payment for Patient ID: P-2024-001237
+[2024-03-15 09:25:01] DATA: Name: Michael Chang, Credit Card: 4532-9876-5432-1234
+[2024-03-15 09:25:01] DATA: Billing Address: 3456 Payment St, Houston, TX 77001
+[2024-03-15 09:25:01] DATA: Amount: $1,250.00, Insurance Claim: CLM-2024-789012
+[2024-03-15 09:30:45] PATIENT: Loading record for Patient ID: P-2024-001238
+[2024-03-15 09:30:46] DATA: Name: David Williams, DOB: 1968-12-05, SSN: 555-66-7777
+[2024-03-15 09:30:46] DATA: Phone: 555.765.4321, Email: dwilliams@company.com
+[2024-03-15 09:30:46] DATA: Employer: Tech Corp, EIN: 54-9876543
+[2024-03-15 09:30:46] DATA: Work Address: 7890 Corporate Blvd, San Francisco, CA 94107
+[2024-03-15 09:35:20] AUDIT: Exported 50 patient records to backup system
+[2024-03-15 09:35:21] AUDIT: Records contained 50 SSNs, 50 phone numbers, 45 email addresses
+[2024-03-15 09:40:00] ACCESS: User DR_JONES logged in from IP 10.0.0.50
+[2024-03-15 09:40:15] PATIENT: Accessing minor patient record - Parent consent verified
+[2024-03-15 09:40:16] DATA: Minor: Emma Wilson, DOB: 2010-07-20, Parent SSN: 666-77-8888
+[2024-03-15 09:40:16] DATA: Guardian: Lisa Wilson, Phone: (555) 876-5432
+[2024-03-15 09:40:16] DATA: School: Lincoln Elementary, Student ID: STU-2024-5678
+[2024-03-15 09:45:00] EMERGENCY: Accessing emergency contact database
+[2024-03-15 09:45:01] DATA: Total contacts: 1,250 phone numbers, 980 email addresses
+[2024-03-15 09:50:00] SYSTEM: Daily backup completed - 10,000 records processed
+[2024-03-15 09:50:01] INFO: System shutdown initiated
