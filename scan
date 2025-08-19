@@ -1,11 +1,34 @@
 #!/bin/bash
-# Simple launcher that handles everything
+# Universal PII Scanner - auto-handles all file sizes and types
 
-# Check if venv exists, if not run setup
+# Check if virtual environment exists
 if [ ! -d "venv" ]; then
     echo "🔧 First time setup..."
     ./setup.sh
+fi
+
+# Run the appropriate scanner based on user preference
+if [ "$1" == "--advanced" ] || [ "$1" == "-a" ]; then
+    # Advanced mode with all options
+    venv/bin/python pii_launcher.py "${@:2}"
+elif [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+    echo "🔍 PII Scanner - Universal Entry Point"
+    echo ""
+    echo "Usage:"
+    echo "  ./scan                  # Easy mode (guided)"
+    echo "  ./scan --advanced       # Advanced mode (all options)"
+    echo "  ./scan /path/to/scan    # Quick scan specific path"
+    echo ""
+    echo "The scanner automatically handles:"
+    echo "  • Small files (<100MB) - Fast standard processing"
+    echo "  • Large files (100MB-500MB) - Multi-threaded processing"
+    echo "  • Huge files (>500MB) - Automatic large file mode"
+    echo ""
+    echo "No need to worry about file size - we handle it all!"
+elif [ -n "$1" ]; then
+    # Quick scan mode with path provided
+    venv/bin/python pii_launcher.py "$@"
 else
-    # Just run with venv Python
+    # Default easy mode
     venv/bin/python easy_launcher.py
 fi

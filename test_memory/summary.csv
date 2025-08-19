@@ -1,3 +1,0 @@
-file,hash16,size_bytes,modified,controlled,noncontrolled,total,top_types,scan_started,scan_ended
-demo_files/test_document.csv,ace3a8510084cae0,292,2025-08-18T17:39:49.571374,6,1,7,"{'ID': 3, 'EMAIL_ADDRESS': 2, 'ADDRESS': 2}",2025-08-19T13:52:07.716967,2025-08-19T13:52:08.277197
-demo_files/sample_data.txt,a17b0da5d4aa5f08,496,2025-08-18T17:39:49.571374,4,1,5,"{'EMAIL_ADDRESS': 3, 'SOCIAL_MEDIA_HANDLE': 1, 'EIN': 1}",2025-08-19T13:52:08.277775,2025-08-19T13:52:08.706582

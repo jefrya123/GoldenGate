@@ -19,9 +19,10 @@ curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o G
 unzip GoldenGate.zip && cd GoldenGate-main
 chmod +x scan view status setup.sh && ./setup.sh
 
-# Start scanning
-./scan    # Choose scan type and folder
-./view    # See what was found
+# Start scanning - automatically handles ANY file size!
+./scan                      # Easy guided mode
+./scan /path/to/huge/file   # Direct scan (auto-detects size)
+./view                      # See results
 ```
 
 ### Windows
@@ -112,17 +113,20 @@ Options:
 
 ## 🛠️ Advanced Features
 
-### Large Files (>100MB)
-```bash
-# Scan massive files (CSVs, logs, databases)
-venv/bin/python -m app.large_file_scanner /path/to/huge_file.csv
-# Handles files of ANY size - even multi-GB files!
-```
+### File Size Handling (Automatic!)
+The scanner automatically detects and optimizes for:
+- **Small files** (<100MB): Standard fast processing
+- **Large files** (100-500MB): Multi-threaded processing
+- **Huge files** (>500MB): Streaming with minimal memory
+- **Massive datasets** (Multi-GB): Intelligent chunking
 
-### Direct Command Line
+### Direct Scanning
 ```bash
-# Scan specific path with custom output
-venv/bin/python pii_launcher.py /path/to/scan ./my_results
+# Quick scan any path - size handled automatically
+./scan /path/to/files
+
+# Advanced mode with all options
+./scan --advanced
 ```
 
 ### Continuous Monitoring
