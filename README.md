@@ -1,165 +1,97 @@
 # GoldenGate PII Scanner
 
-Fast, accurate PII (Personally Identifiable Information) scanner that helps you find and protect sensitive data in your files. Scans documents, CSVs, PDFs, and logs to identify personal information that needs protection.
+Fast, intelligent PII scanner that finds sensitive data in your files. Automatically handles files of ANY size - from small logs to massive breach databases.
 
-## 🎯 Why Use GoldenGate?
+## ✨ Features
 
-- **Compliance Ready**: Helps meet GDPR, HIPAA, and other data protection requirements
-- **Prevent Data Leaks**: Find SSNs, credit cards, emails, and other sensitive info before it's exposed
-- **Fast & Accurate**: Scans thousands of files in minutes with ML-powered detection
-- **Easy to Use**: Three simple commands - no complex configuration needed
-- **Background Scanning**: Check results while scanning continues
+- **Smart Detection**: Finds SSNs, credit cards, emails, phones, addresses, and more
+- **Any File Size**: Automatically optimizes for KB to TB files
+- **Resource Aware**: Adapts to available CPU and memory
+- **Privacy First**: Everything stays on your machine
+- **Simple to Use**: Three commands - scan, view, status
 
-## ⚡ Quick Start (2 Minutes)
+## ⚡ Quick Start
 
-### Linux/macOS
 ```bash
-# Download and setup (no git required!)
+# Install (2 minutes)
 curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
 unzip GoldenGate.zip && cd GoldenGate-main
 chmod +x scan view status setup.sh && ./setup.sh
 
-# Start scanning - automatically handles ANY file size!
-./scan                      # Easy guided mode
-./scan /path/to/huge/file   # Direct scan (auto-detects size)
-./view                      # See results
-```
-
-### Windows
-```bash
-# Use WSL2 (recommended) or see INSTALL.md for native Windows
-wsl --install  # One-time setup
-# Then follow Linux instructions above
-```
-
-## 📦 Requirements
-
-- Python 3.11+
-- 2GB RAM
-- 500MB disk space
-
-## 🚀 How It Works
-
-### 1. Start a Scan
-```bash
-./scan
-```
-Choose your scan type:
-- **Quick Scan** - Scan and wait for results
-- **Background** - Scan large folders while you work
-- **Monitor** - Watch folder for new files continuously
-
-### 2. View Results
-```bash
-./view
-```
-Options:
-- Summary - Quick overview of findings
-- Details - See actual PII found
-- Export - Save to CSV for reports
-
-### 3. Check Progress
-```bash
-./status  # Is scan running? How many files done?
+# Scan files
+./scan ~/Documents        # Scan a folder
+./scan                    # Interactive mode
+./view                    # See what was found
 ```
 
 ## 📊 What It Detects
 
-**Financial Data**
-- Social Security Numbers (SSN)
-- Credit Card Numbers
-- Bank Account Numbers
-- Employer Identification Numbers (EIN)
+- **Financial**: SSN, Credit Cards, Bank Accounts, EIN
+- **Personal**: Phone Numbers, Email Addresses, Physical Addresses
+- **Identity**: Driver Licenses, Passport Numbers
+- **Digital**: IP Addresses, Social Media Handles
 
-**Personal Information**
-- Phone Numbers
-- Email Addresses
-- Physical Addresses
-- Driver License Numbers
-- ZIP Codes
+## 🎯 Use Cases
 
-**Digital Identifiers**
-- Social Media Handles
-- IP Addresses
-- URLs with personal data
-
-## 💡 Common Use Cases
-
-### Before Sharing Files
+### Quick Security Check
 ```bash
-./scan
-> Choose: 1 (Quick scan)
-> Path: /project/docs
-# Review findings before sending
+./scan /project/before-release
+./view --summary
 ```
 
 ### Monitor Uploads Folder
 ```bash
 ./scan
-> Choose: 3 (Monitor)
-> Path: /dropbox/incoming
-# Alerts on new files with PII
+> Choose: Monitor mode
+> Path: /var/uploads
+# Continuously watches for PII in new files
 ```
 
-### Compliance Audit
+### Scan Large Dataset
 ```bash
-./scan
-> Choose: 2 (Background)
-> Path: /company/data
-./view
-> Choose: 3 (Export CSV)
-# Generate compliance report
+./scan /datasets/breach_2024.csv
+# Automatically handles multi-GB files
+# Shows progress, uses minimal memory
 ```
 
-## 🛠️ Advanced Features
+## 📖 Documentation
 
-### File Size Handling (Automatic!)
-The scanner automatically detects and optimizes for:
-- **Small files** (<100MB): Standard fast processing
-- **Large files** (100-500MB): Multi-threaded processing
-- **Huge files** (>500MB): Streaming with minimal memory
-- **Massive datasets** (Multi-GB): Intelligent chunking
+- [Installation Guide](INSTALL.md) - Platform-specific setup
+- [Command Reference](COMMANDS.md) - Detailed command usage
+- [Quick Start Guide](QUICK_START.md) - Step-by-step tutorial
 
-### Direct Scanning
-```bash
-# Quick scan any path - size handled automatically
-./scan /path/to/files
+## 🔧 How It Works
 
-# Advanced mode with all options
-./scan --advanced
-```
+1. **Automatic Optimization**: Detects file size and system resources
+2. **Smart Processing**: 
+   - Small files: Fast single-threaded
+   - Medium files: Parallel multi-threaded
+   - Large files: Memory-efficient streaming
+3. **Instant Results**: View findings while scan continues
 
-### Continuous Monitoring
-```bash
-# Watch folder with 30-second checks
-venv/bin/python -m app.scanner_cli watch /uploads --poll-seconds 30
-```
+## 💡 System Requirements
 
-### API Integration
-```python
-from app.scanner import Scanner
-scanner = Scanner()
-results = scanner.scan_directory("/path")
-```
+- Python 3.11+
+- 2GB RAM minimum (adapts to what's available)
+- Works on Linux, macOS, Windows (WSL2)
 
-## 🔧 Troubleshooting
+## 🚀 Advanced Features
 
-| Problem | Fix |
-|---------|-----|
-| Won't start | Run `./setup.sh` again |
-| Python error | Need Python 3.11+ (`python3 --version`) |
-| Permission denied | `chmod +x scan view status setup.sh` |
-| Can't download | Try `git clone https://github.com/jefrya123/GoldenGate.git` |
+The scanner automatically adapts to your system:
+- **2 CPU, 2GB RAM**: Uses 2 workers, conservative memory
+- **4 CPU, 4GB RAM**: Uses 4 workers, parallel processing
+- **Limited resources**: Automatically scales down
+- **Plenty resources**: Maximizes performance
 
-## 📚 More Info
-
-- [INSTALL.md](INSTALL.md) - Detailed installation for all platforms
-- [QUICK_START.md](QUICK_START.md) - Step-by-step usage guide
-- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
+No configuration needed - it just works!
 
 ## 📄 License
 
 MIT License - Free for personal and commercial use
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
