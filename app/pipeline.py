@@ -43,8 +43,10 @@ def scan_file_once(
     if exts is None:
         exts = {'.txt', '.csv', '.log', '.md', '.html', '.pdf'}
     
-    # Initialize counters
-    total_hits = []
+    # Initialize counters (memory-efficient)
+    total_count = 0
+    controlled_count = 0
+    noncontrolled_count = 0
     entity_type_counts = {}
     
     # Open JSONL output file if specified
@@ -67,13 +69,19 @@ def scan_file_once(
                 overlap=overlap
             )
             
-            # Add hits to total
-            total_hits.extend(hits)
-            
-            # Write hits to JSONL if specified
-            if jsonl_file:
-                for hit in hits:
-                    # Convert EntityHit to dict for JSON serialization
+            # Update counters (don't store hits in memory)
+            for hit in hits:
+                total_count += 1
+                if hit.label == "Controlled":
+                    controlled_count += 1
+                elif hit.label == "NonControlled":
+                    noncontrolled_count += 1
+                
+                # Count entity types
+                entity_type_counts[hit.entity_type] = entity_type_counts.get(hit.entity_type, 0) + 1
+                
+                # Write to JSONL if specified
+                if jsonl_file:
                     hit_dict = {
                         'entity_type': hit.entity_type,
                         'value': hit.value,
@@ -86,6 +94,9 @@ def scan_file_once(
                     }
                     jsonl_file.write(json.dumps(hit_dict) + '\n')
                     jsonl_file.flush()  # Ensure immediate writing
+            
+            # Clear hits from memory after processing
+            del hits
     
     finally:
         # Close JSONL file if open
@@ -94,15 +105,11 @@ def scan_file_once(
     
     # Generate summary
     summary = FileSummary(
-        total=len(total_hits),
-        controlled=sum(1 for hit in total_hits if hit.label == "Controlled"),
-        noncontrolled=sum(1 for hit in total_hits if hit.label == "NonControlled"),
-        top_types={}
+        total=total_count,
+        controlled=controlled_count,
+        noncontrolled=noncontrolled_count,
+        top_types=entity_type_counts
     )
-    
-    # Count entity types
-    for hit in total_hits:
-        summary.top_types[hit.entity_type] = summary.top_types.get(hit.entity_type, 0) + 1
     
     # Sort top types by count (descending)
     summary.top_types = dict(sorted(
