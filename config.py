@@ -10,7 +10,7 @@ MAX_WORKERS = min(8, os.cpu_count() or 4)  # Number of parallel threads
 CHUNK_SIZE = 2000  # Size of text chunks for processing
 CHUNK_OVERLAP = 100  # Overlap between chunks
 MIN_FILE_SIZE = 100  # Skip files smaller than this (bytes)
-MAX_FILE_SIZE = 100 * 1024 * 1024  # Skip files larger than 100MB
+MAX_FILE_SIZE = 500 * 1024 * 1024  # Skip files larger than 500MB (safety limit)
 BATCH_SIZE = 100  # Files to process per batch
 
 # Confidence Thresholds

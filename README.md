@@ -112,6 +112,13 @@ Options:
 
 ## 🛠️ Advanced Features
 
+### Large Files (>100MB)
+```bash
+# Scan massive files (CSVs, logs, databases)
+venv/bin/python -m app.large_file_scanner /path/to/huge_file.csv
+# Handles files of ANY size - even multi-GB files!
+```
+
 ### Direct Command Line
 ```bash
 # Scan specific path with custom output

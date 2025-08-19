@@ -89,7 +89,7 @@ class EnhancedScanner:
             if size < MIN_FILE_SIZE:
                 return True, f"File too small: {size} bytes"
             if size > MAX_FILE_SIZE:
-                return True, f"File too large: {size / (1024*1024):.1f} MB"
+                return True, f"File too large: {size / (1024*1024):.1f} MB (limit: {MAX_FILE_SIZE / (1024*1024):.0f} MB)"
         except:
             return True, "Cannot access file"
             
