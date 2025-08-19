@@ -5,18 +5,18 @@ Finds sensitive data in your files. Works on any size file.
 ## Install
 
 ```bash
-# Fresh Ubuntu/Debian (install prerequisites)
+# Step 1: Install prerequisites (requires sudo password)
 sudo apt update && sudo apt install -y python3 python3-pip python3-venv python3-dev git
-git clone https://github.com/jefrya123/GoldenGate.git
-cd GoldenGate
-chmod +x scan view status setup.sh
-./setup.sh
+
+# Step 2: Clone and setup (no sudo needed)
+git clone https://github.com/jefrya123/GoldenGate.git && cd GoldenGate && chmod +x scan view status setup.sh && ./setup.sh
 
 # Or without git:
+# Step 1: Install prerequisites (requires sudo password)
 sudo apt update && sudo apt install -y python3 python3-pip python3-venv python3-dev curl unzip
-curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
-unzip GoldenGate.zip && cd GoldenGate-main
-chmod +x scan view status setup.sh && ./setup.sh
+
+# Step 2: Download and setup (no sudo needed)
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip && unzip GoldenGate.zip && cd GoldenGate-main && chmod +x scan view status setup.sh && ./setup.sh
 ```
 
 ## Use
