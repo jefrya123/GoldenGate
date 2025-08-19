@@ -89,29 +89,7 @@ class EnhancedScanner:
             if size < MIN_FILE_SIZE:
                 return True, f"File too small: {size} bytes"
             if size > MAX_FILE_SIZE:
-                # Automatically use large file scanner for huge files
-                print(f"\n📦 File is {size / (1024*1024):.1f} MB - switching to large file scanner...")
-                from app.large_file_scanner import UniversalLargeFileScanner
-                large_scanner = UniversalLargeFileScanner()
-                result = large_scanner.scan_file(file_path, self.out_dir)
-                
-                # Convert result to FileSummary format
-                if result and 'summary' in result:
-                    from pii import FileSummary
-                    summary = FileSummary(
-                        total=result['summary']['total_entities'],
-                        controlled=result['summary']['controlled'],
-                        noncontrolled=result['summary']['noncontrolled'],
-                        top_types={}
-                    )
-                    # Update stats
-                    with self.stats_lock:
-                        self.stats['files_scanned'] += 1
-                        if summary.total > 0:
-                            self.stats['files_with_pii'] += 1
-                            self.stats['total_pii_found'] += summary.total
-                    return summary
-                return None
+                return True, f"File too large: {size / (1024*1024):.1f} MB (limit: {MAX_FILE_SIZE / (1024*1024):.0f} MB) - use large file scanner"
         except:
             return True, "Cannot access file"
             
