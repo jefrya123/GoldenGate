@@ -24,19 +24,25 @@ class UniversalLargeFileScanner:
     Intelligently handles text files, CSVs, PDFs, logs, JSON, XML, etc.
     """
     
-    def __init__(self, max_workers: Optional[int] = None, max_memory_mb: int = 1000):
+    def __init__(self, max_workers: Optional[int] = None, max_memory_mb: Optional[int] = None):
         """
         Initialize universal file scanner.
         
         Args:
             max_workers: Maximum worker processes (auto-detected if None)
-            max_memory_mb: Maximum memory usage in MB
+            max_memory_mb: Maximum memory usage in MB (auto-detected if None)
         """
         self.memory_manager = MemoryManager()
         self.max_workers = max_workers or self.memory_manager.get_optimal_workers()
-        self.max_memory_mb = max_memory_mb
+        # Auto-calculate memory limit (80% of available RAM)
+        if max_memory_mb is None:
+            import psutil
+            total_mb = psutil.virtual_memory().total / (1024 * 1024)
+            self.max_memory_mb = int(total_mb * 0.8)
+        else:
+            self.max_memory_mb = max_memory_mb
         
-        print(f"🚀 Universal Scanner initialized: {self.max_workers} workers, {max_memory_mb}MB memory limit")
+        print(f"🚀 Universal Scanner initialized: {self.max_workers} workers, {self.max_memory_mb}MB memory limit")
     
     def scan_file(self, file_path: Path, out_dir: Path) -> Dict[str, Any]:
         """
