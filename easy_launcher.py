@@ -42,20 +42,22 @@ def get_scan_mode():
     print("\n" + "=" * 70)
     print("🔍 CHOOSE SCAN MODE")
     print("=" * 70)
-    print("\n1. 📄 One-time scan (wait for completion)")
-    print("2. 🚀 Background scan (run in background, view results anytime)")
-    print("3. 🔄 Monitor folder (continuously watch for new files)")
+    print("\n1. 📄 One-time scan (scans files once and exits)")
+    print("2. 🔄 Continuous monitoring (watches folder for new/changed files)")
     
     while True:
-        choice = input("\n👉 Enter choice (1-3): ").strip()
+        choice = input("\n👉 Enter choice (1-2): ").strip()
         if choice == "1":
+            # Ask if they want background for one-time scan
+            print("\n🚀 Run scan in background? (you can use terminal while scanning)")
+            bg = input("👉 Background mode? (y/N): ").strip().lower()
+            if bg in ['y', 'yes']:
+                return "background"
             return "scan"
         elif choice == "2":
-            return "background"
-        elif choice == "3":
             return "monitor"
         else:
-            print("❌ Please enter 1, 2, or 3")
+            print("❌ Please enter 1 or 2")
 
 def get_user_input():
     """Get user input in a friendly way."""
@@ -169,12 +171,17 @@ def explain_process():
 def run_monitor(scan_path, output_path):
     """Run continuous monitoring."""
     print("\n" + "=" * 70)
-    print("🔄 MONITORING MODE ACTIVE")
+    print("🔄 CONTINUOUS MONITORING ACTIVE")
     print("=" * 70)
     print()
-    print(f"📁 Monitoring: {scan_path}")
-    print(f"💾 Results saved to: {output_path}")
+    print(f"📁 Watching: {scan_path}")
+    print(f"💾 Results: {output_path}")
     print("⏱️  Checking every 30 seconds for new/changed files")
+    print()
+    print("ℹ️  While monitoring is running:")
+    print("   • Open a new terminal and run: ./view")
+    print("   • Add/modify files in the watched folder")
+    print("   • Run ./view again to see updated results!")
     print("\n⚠️  Press Ctrl+C to stop monitoring\n")
     
     # Run monitor command
