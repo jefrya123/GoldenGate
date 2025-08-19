@@ -7,7 +7,7 @@ Fast, accurate PII (Personally Identifiable Information) scanner with smart clas
 ### Linux/macOS
 ```bash
 # One-time setup (no git required!)
-wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
 unzip GoldenGate.zip
 cd GoldenGate-main
 chmod +x scan view status setup.sh
@@ -36,8 +36,8 @@ See [INSTALL.md](INSTALL.md) for Windows installation instructions.
 **Option 1: One-Line Install (No Git)**
 ```bash
 # Everything in one command
-sudo apt update && sudo apt install -y python3 python3-pip python3-venv wget unzip && \
-wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip && \
+sudo apt update && sudo apt install -y python3 python3-pip python3-venv curl unzip && \
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip && \
 unzip GoldenGate.zip && cd GoldenGate-main && \
 chmod +x scan view status setup.sh && ./setup.sh
 ```

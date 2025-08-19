@@ -13,10 +13,10 @@ cd GoldenGate
 
 ### Option 2: GitHub (Without Git - Download ZIP)
 ```bash
-# Download ZIP file
-wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
-# OR
+# Download ZIP file (use curl, more reliable)
 curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
+# OR if curl is not available
+wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
 
 # Extract
 unzip GoldenGate.zip
@@ -55,10 +55,10 @@ chmod +x scan view status setup.sh
 ```bash
 # Install Python only
 sudo apt update
-sudo apt install -y python3 python3-pip python3-venv wget unzip
+sudo apt install -y python3 python3-pip python3-venv curl unzip
 
 # Download from GitHub
-wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
 unzip GoldenGate.zip
 cd GoldenGate-main
 
@@ -96,11 +96,11 @@ chmod +x scan view status setup.sh
 ### Method 2: Without Git
 
 ```bash
-# Install Python and wget
-sudo dnf install -y python3 python3-pip python3-devel wget unzip
+# Install Python and curl
+sudo dnf install -y python3 python3-pip python3-devel curl unzip
 
 # Download from GitHub
-wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
 unzip GoldenGate.zip
 cd GoldenGate-main
 
@@ -127,7 +127,7 @@ wsl --install
 ```bash
 # Open Ubuntu from Start Menu, then:
 sudo apt update
-sudo apt install -y python3 python3-pip python3-venv wget unzip
+sudo apt install -y python3 python3-pip python3-venv curl unzip
 
 # Download from GitHub (no git needed)
 wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
@@ -240,7 +240,7 @@ docker run -v $(pwd)/scan_data:/scan_data goldengate-scanner /scan_data
 ### Method 2: Without Git
 ```bash
 # Download and extract
-wget https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -O GoldenGate.zip
+curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
 unzip GoldenGate.zip
 cd GoldenGate-main
 
