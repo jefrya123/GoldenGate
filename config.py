@@ -5,8 +5,13 @@ Configuration settings for PII Scanner performance and accuracy tuning
 import os
 from typing import Set, List
 
-# Performance Settings
-MAX_WORKERS = min(8, os.cpu_count() or 4)  # Number of parallel threads
+# Performance Settings (auto-scales based on system resources)
+import psutil
+_cpu_count = os.cpu_count() or 2
+_memory_gb = psutil.virtual_memory().total / (1024 ** 3) if 'psutil' in dir() else 4
+# Scale workers based on both CPU and memory (assume 512MB per worker)
+_memory_workers = max(int(_memory_gb * 1024 / 512), 1)
+MAX_WORKERS = min(_cpu_count, _memory_workers, 8)  # Auto-scales: 2 CPU/2GB = 2 workers, 4 CPU/4GB = 4 workers
 CHUNK_SIZE = 2000  # Size of text chunks for processing
 CHUNK_OVERLAP = 100  # Overlap between chunks
 MIN_FILE_SIZE = 100  # Skip files smaller than this (bytes)
