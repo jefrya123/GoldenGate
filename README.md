@@ -1,6 +1,15 @@
 # GoldenGate PII Scanner
 
-Finds sensitive data in your files. Works on any size file.
+Fast, lightweight tool that finds sensitive data in your files. Automatically handles any file size with minimal resource usage (~240MB RAM).
+
+![Scanner Start](Screenshots/scanstart.png)
+
+## Key Features
+- 🔍 **Detects 15+ PII types** - IDs, credit cards, phones, emails, addresses, and more
+- ⚡ **Lightning fast** - Multi-threaded scanning with smart filtering
+- 📊 **Two modes** - Quick one-time scan or continuous monitoring
+- 💾 **Resource efficient** - Uses only ~240MB RAM, perfect for VMs
+- 🔒 **100% offline** - Nothing leaves your machine
 
 ## Install
 
@@ -28,6 +37,12 @@ curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o G
 ./view                   # See results
 ```
 
+### Quick Scan Results
+![Quick Summary](Screenshots/quicksum.png)
+
+### Detailed View
+![Detailed Summary](Screenshots/detsum.png)
+
 ## What It Finds
 
 Personal identifiers, Credit Cards, Phone Numbers, Emails, Addresses, Driver Licenses, Passport Numbers, Tax IDs, Bank Accounts
@@ -41,9 +56,18 @@ Personal identifiers, Credit Cards, Phone Numbers, Emails, Addresses, Driver Lic
 ## Monitoring Mode
 
 Watch a folder for new files:
+
+![Path Selection](Screenshots/path.png)
+
+Real-time detection as files are added:
+
+![Continuous Monitoring](Screenshots/conmon.png)
+
 ```bash
-./scan --advanced
-# Choose option 2 (watch)
+./scan
+# Choose option 2 (Monitor Folder)
+# Enter path to watch
+# Detects new files automatically
 ```
 
 ## Troubleshooting
