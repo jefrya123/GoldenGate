@@ -1,152 +1,145 @@
 # GoldenGate PII Scanner
 
-Fast, accurate PII (Personally Identifiable Information) scanner with smart classification.
+Fast, accurate PII (Personally Identifiable Information) scanner that helps you find and protect sensitive data in your files.
 
-## ⚡ Quick Start
+## 🎯 Why Use GoldenGate?
+
+- **Compliance Ready**: Helps meet GDPR, HIPAA, and other data protection requirements
+- **Prevent Data Leaks**: Find SSNs, credit cards, emails, and other sensitive info before it's exposed
+- **Fast & Accurate**: Scans thousands of files in minutes with ML-powered detection
+- **Easy to Use**: Three simple commands - no complex configuration needed
+- **Background Scanning**: Check results while scanning continues
+
+## ⚡ Quick Start (2 Minutes)
 
 ### Linux/macOS
 ```bash
-# One-time setup (no git required!)
+# Download and setup (no git required!)
 curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip
-unzip GoldenGate.zip
-cd GoldenGate-main
-chmod +x scan view status setup.sh
-./setup.sh
+unzip GoldenGate.zip && cd GoldenGate-main
+chmod +x scan view status setup.sh && ./setup.sh
 
-# Use the scanner
-./scan    # Start scanning
-./view    # View results
-./status  # Check scan progress
+# Start scanning
+./scan    # Choose scan type and folder
+./view    # See what was found
 ```
 
 ### Windows
-See [INSTALL.md](INSTALL.md) for Windows installation instructions.
+```bash
+# Use WSL2 (recommended) or see INSTALL.md for native Windows
+wsl --install  # One-time setup
+# Then follow Linux instructions above
+```
 
-## 📦 Installation
+## 📦 Requirements
 
-**Full installation guide**: [INSTALL.md](INSTALL.md)
-
-### System Requirements
-- Python 3.11 or higher
-- 2GB RAM minimum
+- Python 3.11+
+- 2GB RAM
 - 500MB disk space
 
-### Quick Install (Linux/macOS)
+## 🚀 How It Works
 
-**Option 1: One-Line Install (No Git)**
+### 1. Start a Scan
 ```bash
-# Everything in one command
-sudo apt update && sudo apt install -y python3 python3-pip python3-venv curl unzip && \
-curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o GoldenGate.zip && \
-unzip GoldenGate.zip && cd GoldenGate-main && \
-chmod +x scan view status setup.sh && ./setup.sh
-```
-
-**Option 2: With Git**
-```bash
-sudo apt install -y python3 python3-pip python3-venv git
-git clone https://github.com/jefrya123/GoldenGate.git
-cd GoldenGate
-./setup.sh
-```
-
-## 🚀 Usage
-
-### Three Simple Commands
-```bash
-./scan    # Start scanning
-./view    # View results (works during scanning!)
-./status  # Check if scan is running
-```
-
-### Scan Modes
-
-When you run `./scan`, choose from:
-1. **One-time scan** - Wait for completion
-2. **Background scan** - Run in background, view results anytime
-3. **Monitor folder** - Continuously watch for new files
-
-### Example Usage
-
-```bash
-# Quick scan
 ./scan
-> Choose: 1 (One-time scan)
-> Path: /home/user/documents
-> Output: (press Enter for default)
+```
+Choose your scan type:
+- **Quick Scan** - Scan and wait for results
+- **Background** - Scan large folders while you work
+- **Monitor** - Watch folder for new files continuously
 
-# Background scan for large directories
+### 2. View Results
+```bash
+./view
+```
+Options:
+- Summary - Quick overview of findings
+- Details - See actual PII found
+- Export - Save to CSV for reports
+
+### 3. Check Progress
+```bash
+./status  # Is scan running? How many files done?
+```
+
+## 📊 What It Finds
+
+| Type | Examples | Risk Level |
+|------|----------|------------|
+| **Financial** | Credit cards, bank accounts, SSN | Critical |
+| **Personal** | Names, addresses, phone numbers | High |
+| **Digital** | Emails, IP addresses, URLs | Medium |
+| **Medical** | Patient IDs, medical terms | Critical |
+| **Custom** | Your own patterns (configurable) | Variable |
+
+## 💡 Common Use Cases
+
+### Before Sharing Files
+```bash
 ./scan
-> Choose: 2 (Background scan)
-> Path: /mnt/large_storage
-> Output: (press Enter)
-
-# Then check progress
-./status
-./view
+> Choose: 1 (Quick scan)
+> Path: /project/docs
+# Review findings before sending
 ```
 
-## 📊 Viewing Results
-
-### Quick Summary
+### Monitor Uploads Folder
 ```bash
-./view
-> Choose: 1
+./scan
+> Choose: 3 (Monitor)
+> Path: /dropbox/incoming
+# Alerts on new files with PII
 ```
-Shows file counts and severity levels.
 
-### Detailed View
+### Compliance Audit
 ```bash
+./scan
+> Choose: 2 (Background)
+> Path: /company/data
 ./view
-> Choose: 2
+> Choose: 3 (Export CSV)
+# Generate compliance report
 ```
-Shows actual PII found with context.
 
-### Export Results
+## 🛠️ Advanced Features
+
+### Direct Command Line
 ```bash
-./view
-> Choose: 3
-```
-Exports to CSV for Excel.
-
-## 📁 Output Files
-
-Results are saved in `pii_scan_results/`:
-- `summary.csv` - Overview for Excel
-- `entities-*.jsonl` - Detailed findings
-
-## 🛠️ Advanced Usage
-
-### Command Line Mode
-```bash
-venv/bin/python pii_launcher.py /path/to/scan ./output
+# Scan specific path with custom output
+venv/bin/python pii_launcher.py /path/to/scan ./my_results
 ```
 
 ### Continuous Monitoring
 ```bash
-venv/bin/python -m app.scanner_cli watch /path --out ./output --poll-seconds 30
+# Watch folder with 30-second checks
+venv/bin/python -m app.scanner_cli watch /uploads --poll-seconds 30
 ```
 
-### Custom Output Directory
-```bash
-./scan
-> Output: /custom/path/results
+### API Integration
+```python
+from app.scanner import Scanner
+scanner = Scanner()
+results = scanner.scan_directory("/path")
 ```
 
-## 🆘 Troubleshooting
+## 🔧 Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| "Python not found" | Install Python 3.11+ (see [INSTALL.md](INSTALL.md)) |
-| "Permission denied" | Run: `chmod +x scan view status setup.sh` |
-| "Module not found" | Run: `./setup.sh` |
-| "Virtual environment error" | Run: `python3 -m venv venv` |
+| Problem | Fix |
+|---------|-----|
+| Won't start | Run `./setup.sh` again |
+| Python error | Need Python 3.11+ (`python3 --version`) |
+| Permission denied | `chmod +x scan view status setup.sh` |
+| Can't download | Try `git clone https://github.com/jefrya123/GoldenGate.git` |
 
-## 📚 Documentation
+## 📚 More Info
 
-- [INSTALL.md](INSTALL.md) - Detailed installation guide
-- [QUICK_START.md](QUICK_START.md) - Usage guide
+- [INSTALL.md](INSTALL.md) - Detailed installation for all platforms
+- [QUICK_START.md](QUICK_START.md) - Step-by-step usage guide
+- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
 
 ## 📄 License
 
-MIT License - See LICENSE file for details.
+MIT License - Free for personal and commercial use
+
+---
+
+**Questions?** Open an issue on [GitHub](https://github.com/jefrya123/GoldenGate/issues)
