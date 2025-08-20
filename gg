@@ -1,0 +1,4 @@
+#!/bin/bash
+# GoldenGate Quick Launcher
+cd "$(dirname "$0")"
+python3 goldengate_console.py "$@"
