@@ -130,7 +130,7 @@ class GoldenGateConsole(cmd.Cmd):
         print(f"{Colors.BLUE}[*] Output: {output_dir}{Colors.END}")
         
         # Run scan in background
-        cmd = ["python", "pii_launcher.py", str(path), str(output_dir)]
+        cmd = ["venv/bin/python", "pii_launcher.py", str(path), str(output_dir)]
         
         if "-r" in args or "--recursive" in args:
             print(f"{Colors.GREEN}[+] Recursive scan enabled{Colors.END}")
@@ -251,7 +251,7 @@ class GoldenGateConsole(cmd.Cmd):
         print(f"{Colors.BLUE}[*] Press Ctrl+C to stop monitoring{Colors.END}")
         
         # This would integrate with the file watching functionality
-        cmd = ["python", "-m", "app.live_cli", str(path)]
+        cmd = ["venv/bin/python", "-m", "app.live_cli", str(path)]
         try:
             subprocess.run(cmd)
         except KeyboardInterrupt:

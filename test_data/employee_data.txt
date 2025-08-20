@@ -1,0 +1,11 @@
+Employee Records - Test File
+
+John Smith
+Email: john.smith@company.com
+Phone: 555-123-4567
+ID: 123-45-6789
+
+Jane Doe
+Email: jane.doe@company.com
+Phone: (555) 987-6543
+Address: 123 Main Street, Anytown, CA 90210
