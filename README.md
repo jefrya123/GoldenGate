@@ -1,13 +1,28 @@
-# GoldenGate PII Scanner
+# 🛡️ GoldenGate PII Scanner
 
-Fast, lightweight tool that finds sensitive data in your files. Automatically handles any file size with minimal resource usage (~240MB RAM).
+Fast, lightweight tool that finds sensitive data in your files. Now with an **interactive console** for easier scanning!
 
 ![Scanner Start](Screenshots/scanstart.png)
 
+## ✨ What's New (Dev Branch)
+
+### 🎮 Interactive Console Mode
+Experience GoldenGate through our new Metasploit-style interactive console - no more memorizing commands!
+
+```bash
+./gg  # Launch interactive console
+
+goldengate > scan .          # Scan current directory
+goldengate > demo            # Run a quick demo
+goldengate > results         # View findings
+goldengate > help            # See all commands
+```
+
 ## Key Features
+- 🎮 **NEW: Interactive Console** - User-friendly interface with tab completion
 - 🔍 **Detects 15+ PII types** - IDs, credit cards, phones, emails, addresses, and more
 - ⚡ **Lightning fast** - Multi-threaded scanning with smart filtering
-- 📊 **Two modes** - Quick one-time scan or continuous monitoring
+- 📊 **Multiple modes** - Console, quick scan, or continuous monitoring
 - 💾 **Resource efficient** - Uses only ~240MB RAM, perfect for VMs
 - 🔒 **100% offline** - Nothing leaves your machine
 
@@ -30,6 +45,16 @@ curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o G
 
 ## Use
 
+### Option 1: Interactive Console (NEW - Easiest!)
+```bash
+./gg                     # Launch console
+> demo                   # Run demo with sample files
+> scan /path/to/folder   # Scan any directory
+> results                # View findings
+> help                   # See all commands
+```
+
+### Option 2: Traditional Commands
 ```bash
 ./scan demo_files/        # Test with demo files
 ./scan /path/to/folder    # Scan a folder
@@ -42,6 +67,42 @@ curl -L https://github.com/jefrya123/GoldenGate/archive/refs/heads/main.zip -o G
 
 ### Detailed View
 ![Detailed Summary](Screenshots/detsum.png)
+
+## Interactive Console Features
+
+The new console makes scanning easier than ever:
+
+```
+goldengate > demo            # Creates sample files and scans them
+🎭 Running GoldenGate Demo
+   ✅ Created employee.txt
+   ✅ Created customer.csv
+   ✅ Created clean.txt
+
+goldengate > status          # Check scan progress
+📊 Status - scan_001
+   Path: gg_demo
+   Status: ✅ Completed
+   Duration: 0:00:02
+   Found: 9 PII items
+
+goldengate > results         # View formatted results
+📊 Scan Results - scan_001
+   📁 Files scanned: 3
+   ⚠️  Files with PII: 2
+   🔍 Total PII found: 9
+```
+
+### Console Commands
+- `scan <path>` - Scan files or directories
+- `demo` - Run interactive demo
+- `status` - Check scan progress
+- `results` - View scan results
+- `list` - Show all scans
+- `export` - Export results (CSV/JSON)
+- `config` - Manage settings
+- `help` - Show help
+- `exit` - Exit console
 
 ## What It Finds
 
